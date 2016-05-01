@@ -1,3 +1,3 @@
 # pimpmytoast
 
-if there is an es6 compliant file, it's going to be chosen instead of the es5 file 
+Use the es6 modifier in Gruntfile.js to enable es6 support: es6 lint and babel es5 transpiling
