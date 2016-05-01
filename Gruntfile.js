@@ -3,6 +3,7 @@ module.exports = function(grunt) {
   // Project configuration.
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
     // compile sass into css
     sass: {
       dist: {
@@ -11,6 +12,7 @@ module.exports = function(grunt) {
         }
       }
     },
+
     // minify css
     cssmin: {
       target: {
@@ -23,14 +25,46 @@ module.exports = function(grunt) {
         }]
       }
     },
-    // lint the es6 code
+
+    // lint code
     eslint: {
-		    target: ['src/main.js']
+		    target: ['Gruntfile.js','src/**/*.js']
     },
+
+    // minify code
+    uglify: {
+      options: {
+        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
+      },
+      dist: {
+        files: {
+        'dist/js/main.min.js' : 'src/main.js'
+        }
+      }
+    },
+
+
+    /* ==== Optional ES6 Support ==== */
+    // switch between writing es5 or es6 code
+    if: {
+      target: {
+        // Target-specific file lists and/or options go here.
+        options: {
+        // execute test function(s)
+        //  test: grunt.file.isMatch('src/*![-es5].js')
+          test: (function(isES6) { return false; })
+        },
+        //array of tasks to execute if all tests pass
+        ifTrue: ['eslint', 'babel'],
+        ifFalse: ['eslint']
+      }
+    },
+
     // convert es6 code to es5
     babel: {
       options: {
-        presets: ['es2015']
+        presets: ['es2015'],
+        ignore: '.*\-es5\.js'
       },
       dist: {
         files: {
@@ -38,19 +72,12 @@ module.exports = function(grunt) {
         }
       }
     },
-    // minify the es5 compliant code
-    uglify: {
-      options: {
-        banner: '/*! <%= pkg.name %> <%= grunt.template.today("yyyy-mm-dd") %> */\n'
-      },
-      build: {
-        src: 'dist/js/main.js',
-        dest: 'dist/js/main.min.js'
-      }
-    }
+    /* ==== END Optional ES6 Support ==== */
+
   });
 
   // Load plugins
+  grunt.loadNpmTasks('grunt-if');
   grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-eslint');
   grunt.loadNpmTasks('grunt-babel');
@@ -58,7 +85,7 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-cssmin');
 
   // Default task(s)
-  grunt.registerTask('default', ['sass', 'cssmin', 'eslint', 'babel', 'uglify']);
+  grunt.registerTask('default', ['sass', 'cssmin', 'if', 'uglify']);
 
 
 
