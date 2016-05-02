@@ -28,7 +28,7 @@ module.exports = function(grunt) {
 
     // lint code
     eslint: {
-		    target: ['Gruntfile.js','src/**/*.js']
+		    target: ['Gruntfile.js','app/**/*.js']
     },
 
     // minify code
@@ -38,7 +38,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-        'dist/js/main.min.js' : 'src/main.js'
+        'dist/js/main.min.js' : 'app/main.js'
         }
       }
     },
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/js/main.js': 'src/main.js'
+          'dist/js/main.js': 'app/main.js'
         }
       }
     },
