@@ -31,6 +31,15 @@ module.exports = function(grunt) {
 		    target: ['Gruntfile.js','app/**/*.js']
     },
 
+    // modularize code
+    browserify: {
+      dist: {
+        files: {
+          'dist/js/app.js' : 'app/app.js'
+        }
+      }
+    },
+
     // minify code
     uglify: {
       options: {
@@ -38,10 +47,11 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-        'dist/js/main.min.js' : 'app/main.js'
+        'dist/js/app.min.js' : 'dist/js/app.js'
         }
       }
     },
+
 
 
     /* ==== Optional ES6 Support ==== */
@@ -68,7 +78,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/js/main.js': 'app/main.js'
+          'dist/js/app.js': 'app/app.js'
         }
       }
     },
@@ -83,9 +93,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-babel');
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
+  grunt.loadNpmTasks('grunt-browserify');
 
   // Default task(s)
-  grunt.registerTask('default', ['sass', 'cssmin', 'if', 'uglify']);
+  grunt.registerTask('default', ['sass', 'cssmin', 'if', 'browserify', 'uglify']);
 
 
 
