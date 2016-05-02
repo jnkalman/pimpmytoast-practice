@@ -29,22 +29,22 @@
         </div>
         <div class="panel-body">
 
-            <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
-            <div class="form-group">
-              <input class="form-control" placeholder="Event Name" v-model="event.name">
-            </div>
+          <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
+          <div class="form-group">
+            <input class="form-control" placeholder="Event Name" v-model="event.name">
+          </div>
 
-            <div class="form-group">
-              <textarea class="form-control" placeholder="Event Description" v-model="event.description" ></textarea>
-            </div>
+          <div class="form-group">
+            <textarea class="form-control" placeholder="Event Description" v-model="event.description" ></textarea>
+          </div>
 
-            <div class="form-group">
-              <input type="date" class="form-control" placeholder="Date" v-model="event.date">
-            </div>
+          <div class="form-group">
+            <input type="date" class="form-control" placeholder="Date" v-model="event.date">
+          </div>
 
-            <!-- pass a method to be run on click (addEvent), could use on keyup or other events that are less specific than angular's ng-click method -->
+          <!-- pass a method to be run on click (addEvent), could use on keyup or other events that are less specific than angular's ng-click method -->
 
-            <button class="btn btn-primary" v-on="click: addEvent">Submit</button>
+          <button class="btn btn-primary" @click= "addEvent">Submit</button>
 
         </div>
 
@@ -54,6 +54,22 @@
     <!-- show the events -->
     <div class="col-sm-6">
       <div class="list-group">
+        <!-- using handlebars templates -->
+        <a href="#" class="list-group-item" v-for="event in events">
+          <h4 class="list-group-item-heading">
+            <i class="glyphicon glyphicon-bullhorn"></i>
+            {{ event.name }}
+          </h4>
+
+          <h5>
+            <i class="glyphicon glyphicon-calendar" v-if="event.date"></i>
+            {{ event.date }}
+          </h5>
+
+          <p class="list-group-item-text" v-if="event.description">{{ event.description }}</p>
+
+          <button class="btn btn-xs btn-danger" @click="deleteEvent(event)">Delete</button>
+        </a>
 
       </div>
     </div>

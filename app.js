@@ -58,6 +58,15 @@ new Vue({
         // reset event
         this.event = {name: '', description: '', date: ''};
       }
+    },
+
+    // deletes an event via the passed in index value
+    deleteEvent: function(event) {
+      if (confirm("Are you sure you want to delete this event?")) {
+        // this is going to change in 2.0, so I may need to rewrite this using
+        // $index and splice
+        this.events.$remove(event);
+      }
     }
   }
 });
