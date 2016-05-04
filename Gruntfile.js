@@ -51,8 +51,14 @@ module.exports = function(grunt) {
         }
       }
     },
+    // configure osx notifications for completed grunt builds
+    notify_hooks: {
+      options: {
+        enabled: true,
+        success: true, // whether successful grunt executions should be notified automatically
+      }
 
-
+    },
 
     /* ==== Optional ES6 Support ==== */
     // switch between writing es5 or es6 code
@@ -84,6 +90,7 @@ module.exports = function(grunt) {
     },
     /* ==== END Optional ES6 Support ==== */
 
+
   });
 
   // Load plugins
@@ -94,10 +101,10 @@ module.exports = function(grunt) {
   grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-cssmin');
   grunt.loadNpmTasks('grunt-browserify');
-
+  grunt.loadNpmTasks('grunt-notify');
   // Default task(s)
   grunt.registerTask('default', ['sass', 'cssmin', 'if', 'browserify', 'uglify']);
 
-
+  grunt.task.run('notify_hooks');
 
 };

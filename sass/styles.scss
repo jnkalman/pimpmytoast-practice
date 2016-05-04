@@ -9,11 +9,30 @@
 }
 
 #messageText {
-  width: 75% !important;
+  width: auto !important;
   min-width: 300px;
 }
 
 #submitButton {
   width: 5% !important;
   min-width: 50px;
+}
+
+.navbar-right li {
+  padding-right: 16px;
+}
+
+// #signedInName {
+//   display: none;
+// }
+
+.fa-circle {
+    padding-right: 5px;
+
+    &.online {
+      color: #4AAF46;
+    }
+    &.offline {
+      color: #D03B3B;
+    }
 }

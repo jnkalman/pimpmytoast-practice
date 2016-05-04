@@ -3,6 +3,7 @@ var Vue = require('vue');
 var Firebase = require('firebase');
 var moment = require('moment');
 // explicit installation required in module environments
+require('jquery-ui');
 Vue.use(require('vuefire'));
 Vue.use(require('vue-resource'));
 
@@ -58,7 +59,9 @@ new Vue({
         messages.push(this.message);
         // reset message
         this.message = {name: this.message.name, description: '', date: ''};
-        $("#name").prop('disabled', true);
+        $("#name").hide();
+        $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
+        $("#signInStatusIcon").switchClass("offline", "online");
       }
     }
     //
