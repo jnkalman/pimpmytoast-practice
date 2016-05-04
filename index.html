@@ -8,75 +8,67 @@
 
   <!-- CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+  <link rel="stylesheet" href="dist/css/styles.min.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
 </head>
 <body>
 
   <!-- navigation bar -->
   <nav class="navbar navbar-default">
     <div class="container-fluid">
-      <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Vue Events Bulletin Board</a>
+      <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Messaging</a>
     </div>
   </nav>
 
   <!-- main body of our application -->
-  <div class="container" id="events">
+  <div class="container" id="messages">
 
-    <!-- add an event form -->
-    <div class="col-sm-6">
-      <div class="panel panel-default">
-        <div class="panel-heading">
-          <h3>Add an Event</h3>
-        </div>
-        <div class="panel-body">
 
-          <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
-          <div class="form-group">
-            <input class="form-control" placeholder="Event Name" v-model="event.name">
-          </div>
-
-          <div class="form-group">
-            <textarea class="form-control" placeholder="Event Description" v-model="event.description" ></textarea>
-          </div>
-
-          <div class="form-group">
-            <input type="date" class="form-control" placeholder="Date" v-model="event.date">
-          </div>
-
-          <!-- pass a method to be run on click (addEvent), could use on keyup or other events that are less specific than angular's ng-click method -->
-
-          <button class="btn btn-primary" @click= "addEvent">Submit</button>
-
-        </div>
-
-      </div>
-    </div>
-
-    <!-- show the events -->
-    <div class="col-sm-6">
-      <div class="list-group">
+    <!-- show the messages -->
+    <div class="col-12">
+      <div class="list-group size-fixed">
         <!-- using handlebars templates -->
-        <a href="#" class="list-group-item" v-for="event in events">
+        <a href="#" class="list-group-item" v-for="message in messages">
           <h4 class="list-group-item-heading">
-            <i class="glyphicon glyphicon-bullhorn"></i>
-            {{ event.name }}
+            {{ message.name }}
           </h4>
 
-          <h5>
-            <i class="glyphicon glyphicon-calendar" v-if="event.date"></i>
-            {{ event.date }}
-          </h5>
+          <p class="list-group-item-text" v-if="message.description">{{ message.description }}</p>
 
-          <p class="list-group-item-text" v-if="event.description">{{ event.description }}</p>
+          <h5><em><small>
+            Sent:
+            {{ message.date }}
+          </em></small></h5>
 
-          <button class="btn btn-xs btn-danger" @click="deleteEvent(event)">Delete</button>
+          <!-- <button class="btn btn-xs btn-danger" @click="deleteMessage(message)">Delete</button> -->
         </a>
 
       </div>
     </div>
+
+    <!-- add a message form -->
+    <div class="col-12">
+
+          <form class="form-inline">
+          <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
+          <div class="form-group">
+            <input id="name" class="form-control" placeholder="Name" v-model="message.name">
+          </div>
+
+          <div class="form-group">
+            <input id="messageText" class="form-control" placeholder="Message" v-model="message.description" ></input>
+          </div>
+
+          <!-- pass a method to be run on click (addmessage), could use on keyup or other messages that are less specific than angular's ng-click method -->
+
+          <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+        </form>
+
+    </div>
+
   </div>
 
   <!-- JS -->
-  <script src="node_modules/jquery/dist/jquery.min.js"></script>
   <script src="dist/js/app.js"></script>
 </body>
 </html>

@@ -1,1 +1,1 @@
-body{font:100% Helvetica,sans-serif;color:#333}
+.size-fixed{max-height:450px;overflow-y:scroll}#name{width:20%!important;min-width:200px}#messageText{width:75%!important;min-width:300px}#submitButton{width:5%!important;min-width:50px}

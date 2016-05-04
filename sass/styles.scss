@@ -1,7 +1,19 @@
-$font-stack:    Helvetica, sans-serif;
-$primary-color: #333;
+.size-fixed {
+    max-height: 450px;
+    overflow-y:scroll;
+}
 
-body {
-  font: 100% $font-stack;
-  color: $primary-color;
+#name {
+  width:20% !important;
+  min-width: 200px;
+}
+
+#messageText {
+  width: 75% !important;
+  min-width: 300px;
+}
+
+#submitButton {
+  width: 5% !important;
+  min-width: 50px;
 }

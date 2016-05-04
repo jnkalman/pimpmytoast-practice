@@ -39,6 +39,7 @@
     "grunt-sass": "^1.1.0",
     "http-server": "^0.9.0",
     "jquery": "^2.2.3",
+    "moment": "^2.13.0",
     "node-sass": "^3.6.0",
     "vue": "^1.0.21",
     "vue-resource": "^0.7.0",
