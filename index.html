@@ -62,7 +62,7 @@
           <form class="form-inline">
           <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
           <div class="form-group">
-            <input id="name" class="form-control" placeholder="Name" v-model="message.name">
+            <input id="name" class="form-control" placeholder="Name" maxlength=16 v-model="message.name">
           </div>
           <div class="input-group">
             <input id="messageText" class="form-control" placeholder="Message" v-model="message.description" ></input>
@@ -78,6 +78,6 @@
   </div>
 
   <!-- JS -->
-  <script src="dist/js/app.min.js"></script>
+  <script src="dist/js/app.js"></script>
 </body>
 </html>

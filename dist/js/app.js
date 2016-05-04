@@ -5,6 +5,7 @@ var Firebase = require('firebase');
 var moment = require('moment');
 // explicit installation required in module environments
 require('jquery-ui');
+//require('bootstrap-maxlength');
 Vue.use(require('vuefire'));
 Vue.use(require('vue-resource'));
 
@@ -65,6 +66,7 @@ new Vue({
         $("#signInStatusIcon").switchClass("offline", "online");
       }
     }
+
     //
     // // deletes an message via the passed in index value
     // deleteMessage: function(message) {
@@ -74,8 +76,23 @@ new Vue({
     //     this.messages.$remove(message);
     //   }
     // }
+
   }
 });
+
+// $(document).ready(function() {
+//     restrictInputFieldLength("name");
+// });
+//
+// var restrictInputFieldLength = function(fieldName) {
+//   $("#" + fieldName).maxlength(
+//     {
+//       threshold: 16,
+//       alwaysShow: false,
+//       placement: 'top-left'
+//     }
+//   );
+// };
 
 },{"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}],2:[function(require,module,exports){
 // shim for using process in browser
