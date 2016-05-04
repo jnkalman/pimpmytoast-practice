@@ -57,7 +57,8 @@ new Vue({
         // add message
         messages.push(this.message);
         // reset message
-        this.message = {description: '', date: ''};
+        this.message = {name: this.message.name, description: '', date: ''};
+        $("#name").prop('disabled', true);
       }
     }
     //
