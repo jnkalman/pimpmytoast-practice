@@ -1,12 +1,25 @@
 var $ = require('jquery');
-// var Vue = require('vue');
-// Vue.use(require('vue-resource'));
+var Vue = require('vue');
+var Firebase = require('firebase');
+
+// explicit installation required in module environments
+Vue.use(require('vuefire'));
+Vue.use(require('vue-resource'));
+
 /* EVENTS VUE */
 
 new Vue({
   // target events div
   el: '#events',
+  // set up firebase connection
+  firebase: {
+    dataRef: new Firebase('https://radiant-torch-6650.firebaseio.com/'),
 
+    eventData: {
+      source: new Firebase('https://radiant-torch-6650.firebaseio.com/'),
+      asObject: true
+    }
+  },
   // register any values or collections that hold data
   // for the application - where viewmodel data is registered
   data: {
@@ -20,6 +33,8 @@ new Vue({
   ready: function() {
     // when the application loads, call the initialize data method
     this.fetchEvents();
+
+    //this.$set('events', eventData);
   },
 
   // custom methods registered here
@@ -27,31 +42,23 @@ new Vue({
 
     // method to retrieve and set data
     fetchEvents: function() {
-      var events = [
-        {
-          id: 1,
-          name: 'TIFF',
-          description: 'Toronto International Film Festival',
-          date: '2015-09-10'
-        },
-        {
-          id: 2,
-          name: 'The Martian Premiere',
-          description: 'The Martian comes to theatres.',
-          date: '2015-10-02'
-        },
-        {
-          id: 3,
-          name: 'SXSW',
-          description: 'Music, film and interactive festival in Austin, TX.',
-          date: '2016-03-11'
-        }
-      ];
+      var events = this.$firebaseRefs.dataRef;
       // $set is a convenience method provided by Vue that is similar to pushing
       // data onto an array
-      this.$set('events', events);
+      //
+      // this.$get('events', function() {
+      //   try {
+      //
+      //   } catch(err) {}
+      // });
+      this.$firebaseRefs.eventData.on("value", function(snapshot) {
+        console.log(snapshot.val());
+      }, function (errorObject) {
+        console.log("The read failed: " + errorObject.code);
+      });
 
-      // ^^ Temp code until JSON get/parse \/ works 
+
+      // ^^ Temp code until JSON get/parse \/ works
 
       /*$.getJSON('data.json');
       try {
