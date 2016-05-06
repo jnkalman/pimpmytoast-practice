@@ -1,4 +1,4 @@
-# pimpmytoast
+# pimpmytoast messenger
 
 ## setup
 
