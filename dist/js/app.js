@@ -41260,14 +41260,14 @@ var $ = require('jquery');
 module.exports = {
 
   getLatestMessageData: function(val) {
-    var latestMessage = {};
+    var latestMessage = [];
 
     for (var key in val) {
       if (val.hasOwnProperty(key)) {
         var obj = val[key];
         for (var prop in obj) {
           if (obj.hasOwnProperty(prop)) {
-
+            // debug and look at console for current progress, monday Jake! Good luck!
               latestMessage.push({ prop : obj[prop]});
           }
         }
@@ -41320,6 +41320,7 @@ var Firebase = require('firebase');
 var moment = require('moment');
 var notify = require('notifyjs');
 var data_functions = require('../data-functions');
+var toggle = require('../toggle-functions');
 require('jquery-ui');
 
 // explicit installation required in module environments
@@ -41357,14 +41358,14 @@ module.exports = {
           var messages = this.$firebaseRefs.messages;
 
           messages.limitToLast(1).on("value", function(snapshot) {
-
-            var latestMessage = data_functions.getLatestMessageData(snapshot.val());
-            console.log(latestMessage);
-            var latestMessageJSON = JSON.stringify(latestMessage);
-            console.log(latestMessageJSON);
-            var latestMessageObj = JSON.parse(latestMessageJSON);
-            console.log(latestMessageObj.date);
-
+            // CHECK HERE MONDAY JAKE
+            // var latestMessage = data_functions.getLatestMessageData(snapshot.val());
+            // console.log(latestMessage);
+            // var latestMessageJSON = JSON.stringify(latestMessage);
+            // console.log(latestMessageJSON);
+            // var latestMessageObj = JSON.parse(latestMessageJSON);
+            // console.log(latestMessageObj.date);
+            toggle.scrollToNewMessage();
           });
           //
           //   var myNotification = new Notify('Yo dawg!', {
@@ -41408,7 +41409,7 @@ module.exports = {
   }
 }
 
-},{"../data-functions":34,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}],37:[function(require,module,exports){
+},{"../data-functions":34,"../toggle-functions":35,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}],37:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');

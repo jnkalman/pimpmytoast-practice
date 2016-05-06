@@ -3,14 +3,14 @@ var $ = require('jquery');
 module.exports = {
 
   getLatestMessageData: function(val) {
-    var latestMessage = {};
+    var latestMessage = [];
 
     for (var key in val) {
       if (val.hasOwnProperty(key)) {
         var obj = val[key];
         for (var prop in obj) {
           if (obj.hasOwnProperty(prop)) {
-
+            // debug and look at console for current progress, monday Jake! Good luck!
               latestMessage.push({ prop : obj[prop]});
           }
         }
