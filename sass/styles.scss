@@ -3,9 +3,21 @@
     overflow-y:scroll;
 }
 
+#messageWindow ul {
+  margin-bottom: 0px;
+}
+
+#messageForm {
+  margin-top: 0px;
+}
+
 #name {
   width:20% !important;
   min-width: 200px;
+}
+
+nav {
+  background-color: transparent;
 }
 
 #messageText {
@@ -22,6 +34,10 @@
   padding-right: 16px;
 }
 
+.title {
+  margin-left:12px;
+  font-weight: 300;
+}
 // #signedInName {
 //   display: none;
 // }

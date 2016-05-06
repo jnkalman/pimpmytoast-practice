@@ -38,9 +38,25 @@ module.exports = {
         subscribe: function() {
           var messages = this.$firebaseRefs.messages;
 
-          messages.on("value", function(snapshot) {
+          messages.limitToLast(1).on("value", function(snapshot) {
             console.log(snapshot.val());
-            console.log("hey i got a message");
+            var latestMessage = snapshot.val();
+            var latestMessageDate;
+
+            for (var key in latestMessage) {
+              if (latestMessage.hasOwnProperty(key)) {
+                var obj = latestMessage[key];
+                for (var prop in obj) {
+                  if (obj.hasOwnProperty(prop)) {
+                    if (prop == "date") {
+                      latestMessageDate = obj[prop];
+                    }
+                  }
+                }
+              }
+            }
+            console.log(latestMessageDate);
+            //toggle.scrollToNewMessage(snapshot.val());
           }, function (errorObject) {
             console.log("The read failed: " + errorObject.code);
           });

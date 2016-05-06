@@ -33,19 +33,27 @@ module.exports = {
       data: {
         onlineUser: { name: '' }
       },
-
+      events: {
+        // messageAdded: function(name) {
+        //   console.log(name.val());
+        //   console.log("hey i got a message");
+        // }, function (errorObject) {
+        //   console.log("The read failed: " + errorObject.code);
+        // });
+        // }
+      },
       // custom methods registered here
       methods: {
-        subscribe: function() {
-          var onlineUsers = this.$firebaseRefs.onlineUsers;
-
-          onlineUsers.on("messageAdded", function(name) {
-            console.log(name.val());
-            console.log("hey i got a message");
-          }, function (errorObject) {
-            console.log("The read failed: " + errorObject.code);
-          });
-        },
+        // subscribe: function() {
+        //   var onlineUsers = this.$firebaseRefs.onlineUsers;
+        //
+        //   onlineUsers.on("messageAdded", function(name) {
+        //     console.log(name.val());
+        //     console.log("hey i got a message");
+        //   }, function (errorObject) {
+        //     console.log("The read failed: " + errorObject.code);
+        //   });
+        // },
 
         // adds an message to the existing messages array
         addUser: function() {

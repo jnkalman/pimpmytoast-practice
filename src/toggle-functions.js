@@ -13,5 +13,15 @@ module.exports = {
         $('#submitButton').attr('disabled' , true);
       }
     });
+  },
+
+  scrollToNewMessage: function() {
+    var target = $('#messageWindow');
+    if( target.length ) {
+      event.preventDefault();
+      target.animate({
+        scrollBottom: target.offset().top
+      }, 1000);
+    }
   }
 }

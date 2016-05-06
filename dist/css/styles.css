@@ -2,9 +2,18 @@
   max-height: 450px;
   overflow-y: scroll; }
 
+#messageWindow ul {
+  margin-bottom: 0px; }
+
+#messageForm {
+  margin-top: 0px; }
+
 #name {
   width: 20% !important;
   min-width: 200px; }
+
+nav {
+  background-color: transparent; }
 
 #messageText {
   width: auto !important;
@@ -16,6 +25,10 @@
 
 .navbar-right li {
   padding-right: 16px; }
+
+.title {
+  margin-left: 12px;
+  font-weight: 300; }
 
 .fa-circle {
   padding-right: 5px; }
