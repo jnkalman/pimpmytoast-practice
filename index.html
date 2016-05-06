@@ -62,7 +62,7 @@
     <!-- add a message form -->
     <div class="col-12">
 
-          <form class="form-inline">
+          <form id="messageForm" class="form-inline">
           <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
           <div class="form-group">
             <input id="name" class="form-control" placeholder="Name" maxlength=16 v-model="message.name">
@@ -73,7 +73,7 @@
 
           <!-- pass a method to be run on click (addmessage), could use on keyup or other messages that are less specific than angular's ng-click method -->
 
-          <button id="submitButton" class="btn btn-primary" @click= "addMessage" ><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+          <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
           </div>
         </form>
     </div>

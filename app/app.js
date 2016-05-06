@@ -4,7 +4,6 @@ var Firebase = require('firebase');
 var moment = require('moment');
 // explicit installation required in module environments
 require('jquery-ui');
-//require('bootstrap-maxlength');
 Vue.use(require('vuefire'));
 Vue.use(require('vue-resource'));
 
@@ -41,6 +40,7 @@ new Vue({
 
       messages.on("value", function(snapshot) {
         console.log(snapshot.val());
+        console.log("hey i got a message");
       }, function (errorObject) {
         console.log("The read failed: " + errorObject.code);
       });
@@ -79,16 +79,24 @@ new Vue({
   }
 });
 
-// $(document).ready(function() {
-//     restrictInputFieldLength("name");
-// });
-//
-// var restrictInputFieldLength = function(fieldName) {
-//   $("#" + fieldName).maxlength(
-//     {
-//       threshold: 16,
-//       alwaysShow: false,
-//       placement: 'top-left'
-//     }
-//   );
-// };
+$(document).ready(function() {
+
+  $("#messageForm").submit(function(e) {
+    e.preventDefault();
+  });
+
+  addButtonEnabledSwitch();
+});
+
+var addButtonEnabledSwitch = function() {
+  $('#submitButton').attr('disabled', true);
+
+  $('#messageText').on('keyup',function() {
+    var messageText_value = $('#messageText').val();
+    if(messageText_value != '') {
+          $('#submitButton').attr('disabled' , false);
+      } else {
+          $('#submitButton').attr('disabled' , true);
+      }
+  });
+};
