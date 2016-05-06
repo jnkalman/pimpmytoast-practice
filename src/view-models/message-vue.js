@@ -2,6 +2,8 @@ var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
 var moment = require('moment');
+var notify = require('notifyjs');
+var data_functions = require('../data-functions');
 require('jquery-ui');
 
 // explicit installation required in module environments
@@ -18,7 +20,7 @@ module.exports = {
       children: [],
       // set up firebase connection
       firebase: {
-        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(4)
+        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25)
       },
       // anything within the ready function will run when
       // the application loads, call methods to initialize the app
@@ -39,27 +41,28 @@ module.exports = {
           var messages = this.$firebaseRefs.messages;
 
           messages.limitToLast(1).on("value", function(snapshot) {
-            console.log(snapshot.val());
-            var latestMessage = snapshot.val();
-            var latestMessageDate;
 
-            for (var key in latestMessage) {
-              if (latestMessage.hasOwnProperty(key)) {
-                var obj = latestMessage[key];
-                for (var prop in obj) {
-                  if (obj.hasOwnProperty(prop)) {
-                    if (prop == "date") {
-                      latestMessageDate = obj[prop];
-                    }
-                  }
-                }
-              }
-            }
-            console.log(latestMessageDate);
-            //toggle.scrollToNewMessage(snapshot.val());
-          }, function (errorObject) {
-            console.log("The read failed: " + errorObject.code);
+            var latestMessage = data_functions.getLatestMessageData(snapshot.val());
+            console.log(latestMessage);
+            var latestMessageJSON = JSON.stringify(latestMessage);
+            console.log(latestMessageJSON);
+            var latestMessageObj = JSON.parse(latestMessageJSON);
+            console.log(latestMessageObj.date);
+
           });
+          //
+          //   var myNotification = new Notify('Yo dawg!', {
+          //     body: 'This is an awesome notification',
+          //     notifyShow: onNotifyShow
+          //   });
+          //
+          //   function onNotifyShow() {
+          //     console.log('notification was shown!');
+          //   }
+          //   toggle.scrollToNewMessage();
+          // }, function (errorObject) {
+          //   console.log("The read failed: " + errorObject.code);
+          // });
         },
         // method to retrieve and set data
         fetchMessages: function() {

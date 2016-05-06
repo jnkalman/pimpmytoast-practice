@@ -13,11 +13,11 @@ $(document).ready(function() {
   });
 
   toggle.addButtonEnabledSwitch();
-
+  toggle.scrollToNewMessage();
   $("#name").focus();
 });
 
-},{"./src/toggle-functions":33,"./src/view-models/message-vue":34,"./src/view-models/online-users-vue":35,"jquery":5}],2:[function(require,module,exports){
+},{"./src/toggle-functions":35,"./src/view-models/message-vue":36,"./src/view-models/online-users-vue":37,"jquery":5}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -29285,6 +29285,221 @@ return jQuery;
 
 }));
 },{}],7:[function(require,module,exports){
+/*
+ * Author: Alex Gibson
+ * https://github.com/alexgibson/notify.js
+ * License: MIT license
+ */
+
+(function(global, factory) {
+    'use strict';
+
+    if (typeof define === 'function' && define.amd) {
+        // AMD environment
+        define(function() {
+            return factory(global, global.document);
+        });
+    } else if (typeof module !== 'undefined' && module.exports) {
+        // CommonJS environment
+        module.exports = factory(global, global.document);
+    } else {
+        // Browser environment
+        global.Notify = factory(global, global.document);
+    }
+} (typeof window !== 'undefined' ? window : this, function (w, d) {
+    'use strict';
+
+    var N = w.Notification;
+
+    function isFunction(item) {
+        return typeof item === 'function';
+    }
+
+    function Notify(title, options) {
+
+        if (typeof title !== 'string') {
+            throw new Error('Notify(): first arg (title) must be a string.');
+        }
+
+        this.title = title;
+
+        this.options = {
+            icon: '',
+            body: '',
+            tag: '',
+            lang: 'en',
+            notifyShow: null,
+            notifyClose: null,
+            notifyClick: null,
+            notifyError: null,
+            timeout: null,
+            requireInteraction: false,
+            closeOnClick: false,
+            silent: false
+        };
+
+        this.permission = null;
+
+        //User defined options for notification content
+        if (typeof options === 'object') {
+
+            for (var i in options) {
+                if (options.hasOwnProperty(i)) {
+                    this.options[i] = options[i];
+                }
+            }
+
+            //callback when notification is displayed
+            if (isFunction(this.options.notifyShow)) {
+                this.onShowCallback = this.options.notifyShow;
+            }
+
+            //callback when notification is closed
+            if (isFunction(this.options.notifyClose)) {
+                this.onCloseCallback = this.options.notifyClose;
+            }
+
+            //callback when notification is clicked
+            if (isFunction(this.options.notifyClick)) {
+                this.onClickCallback = this.options.notifyClick;
+            }
+
+            //callback when notification throws error
+            if (isFunction(this.options.notifyError)) {
+                this.onErrorCallback = this.options.notifyError;
+            }
+        }
+    }
+
+    // returns true if the browser supports Web Notifications
+    // https://developers.google.com/web/updates/2015/05/Notifying-you-of-notificiation-changes
+    // @param {perm} for test purposes only
+    Notify.isSupported = function(perm) {
+        if (!N || !N.requestPermission) {
+            return false;
+        }
+
+        if (perm === 'granted' || N.permission === 'granted') {
+            throw new Error('You must only call this before calling Notification.requestPermission(), otherwise this feature detect would trigger an actual notification!');
+        }
+
+        try {
+            new N('');
+        } catch (e) {
+            if (e.name === 'TypeError') {
+                return false;
+            }
+        }
+        return true;
+    };
+
+    // true if the permission is not granted
+    Notify.needsPermission = (N && N.permission && N.permission === 'granted') ? false : true;
+
+    // asks the user for permission to display notifications.  Then calls the callback functions is supplied.
+    Notify.requestPermission = function(onPermissionGrantedCallback, onPermissionDeniedCallback) {
+        N.requestPermission(function(perm) {
+            switch (perm) {
+                case 'granted':
+                    Notify.needsPermission = false;
+                    if (isFunction(onPermissionGrantedCallback)) {
+                        onPermissionGrantedCallback();
+                    }
+                    break;
+                case 'denied':
+                    Notify.needsPermission = true;
+                    if (isFunction(onPermissionDeniedCallback)) {
+                        onPermissionDeniedCallback();
+                    }
+                    break;
+            }
+        });
+    };
+
+
+    Notify.prototype.show = function() {
+        this.myNotify = new N(this.title, {
+            'body': this.options.body,
+            'tag': this.options.tag,
+            'icon': this.options.icon,
+            'lang': this.options.lang,
+            'requireInteraction': this.options.requireInteraction,
+            'silent': this.options.silent,
+            'closeOnClick': this.options.closeOnClick
+        });
+
+        if (!this.options.requireInteraction && this.options.timeout && !isNaN(this.options.timeout)) {
+            setTimeout(this.close.bind(this), this.options.timeout * 1000);
+        }
+
+        this.myNotify.addEventListener('show', this, false);
+        this.myNotify.addEventListener('error', this, false);
+        this.myNotify.addEventListener('close', this, false);
+        this.myNotify.addEventListener('click', this, false);
+    };
+
+    Notify.prototype.onShowNotification = function(e) {
+        if (this.onShowCallback) {
+            this.onShowCallback(e);
+        }
+    };
+
+    Notify.prototype.onCloseNotification = function(e) {
+        if (this.onCloseCallback) {
+            this.onCloseCallback(e);
+        }
+        this.destroy();
+    };
+
+    Notify.prototype.onClickNotification = function(e) {
+        if (this.onClickCallback) {
+            this.onClickCallback(e);
+        }
+
+        if (this.options.closeOnClick) {
+            this.close();
+        }
+    };
+
+    Notify.prototype.onErrorNotification = function(e) {
+        if (this.onErrorCallback) {
+            this.onErrorCallback(e);
+        }
+        this.destroy();
+    };
+
+    Notify.prototype.destroy = function() {
+        this.myNotify.removeEventListener('show', this, false);
+        this.myNotify.removeEventListener('error', this, false);
+        this.myNotify.removeEventListener('close', this, false);
+        this.myNotify.removeEventListener('click', this, false);
+    };
+
+    Notify.prototype.close = function() {
+        this.myNotify.close();
+    };
+
+    Notify.prototype.handleEvent = function(e) {
+        switch (e.type) {
+        case 'show':
+            this.onShowNotification(e);
+            break;
+        case 'close':
+            this.onCloseNotification(e);
+            break;
+        case 'click':
+            this.onClickNotification(e);
+            break;
+        case 'error':
+            this.onErrorNotification(e);
+            break;
+        }
+    };
+
+    return Notify;
+}));
+
+},{}],8:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -29304,7 +29519,7 @@ module.exports = {
 
 };
 
-},{"../util":30}],8:[function(require,module,exports){
+},{"../util":31}],9:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -29371,7 +29586,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":23,"../../util":30,"./xhr":11}],9:[function(require,module,exports){
+},{"../../promise":24,"../../util":31,"./xhr":12}],10:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -29421,7 +29636,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":23,"../../util":30}],10:[function(require,module,exports){
+},{"../../promise":24,"../../util":31}],11:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -29460,7 +29675,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":23,"../../util":30}],11:[function(require,module,exports){
+},{"../../promise":24,"../../util":31}],12:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -29512,7 +29727,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":23,"../../util":30}],12:[function(require,module,exports){
+},{"../../promise":24,"../../util":31}],13:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -29551,7 +29766,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":30,"./client/xdr":10}],13:[function(require,module,exports){
+},{"../util":31,"./client/xdr":11}],14:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -29579,7 +29794,7 @@ module.exports = {
 
 };
 
-},{"../util":30}],14:[function(require,module,exports){
+},{"../util":31}],15:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -29679,7 +29894,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":23,"../util":30,"./before":7,"./client":8,"./cors":12,"./header":13,"./interceptor":15,"./jsonp":16,"./method":17,"./mime":18,"./timeout":19}],15:[function(require,module,exports){
+},{"../promise":24,"../util":31,"./before":8,"./client":9,"./cors":13,"./header":14,"./interceptor":16,"./jsonp":17,"./method":18,"./mime":19,"./timeout":20}],16:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -29726,7 +29941,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":23,"../util":30}],16:[function(require,module,exports){
+},{"../promise":24,"../util":31}],17:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -29746,7 +29961,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":9}],17:[function(require,module,exports){
+},{"./client/jsonp":10}],18:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -29765,7 +29980,7 @@ module.exports = {
 
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -29803,7 +30018,7 @@ module.exports = {
 
 };
 
-},{"../util":30}],19:[function(require,module,exports){
+},{"../util":31}],20:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -29835,7 +30050,7 @@ module.exports = function () {
     };
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -29890,7 +30105,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":14,"./promise":23,"./resource":24,"./url":25,"./util":30}],21:[function(require,module,exports){
+},{"./http":15,"./promise":24,"./resource":25,"./url":26,"./util":31}],22:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -30071,7 +30286,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":30}],22:[function(require,module,exports){
+},{"../util":31}],23:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -30223,7 +30438,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],23:[function(require,module,exports){
+},{}],24:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -30334,7 +30549,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":21,"./util":30}],24:[function(require,module,exports){
+},{"./lib/promise":22,"./util":31}],25:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -30446,7 +30661,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":30}],25:[function(require,module,exports){
+},{"./util":31}],26:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -30578,7 +30793,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":30,"./legacy":26,"./query":27,"./root":28,"./template":29}],26:[function(require,module,exports){
+},{"../util":31,"./legacy":27,"./query":28,"./root":29,"./template":30}],27:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -30626,7 +30841,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":30}],27:[function(require,module,exports){
+},{"../util":31}],28:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -30652,7 +30867,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":30}],28:[function(require,module,exports){
+},{"../util":31}],29:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -30670,7 +30885,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":30}],29:[function(require,module,exports){
+},{"../util":31}],30:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -30688,7 +30903,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":22}],30:[function(require,module,exports){
+},{"../lib/url-template":23}],31:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -30812,7 +31027,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.21
@@ -40738,7 +40953,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":2}],32:[function(require,module,exports){
+},{"_process":2}],33:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -41039,7 +41254,37 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
+var $ = require('jquery');
+
+module.exports = {
+
+  getLatestMessageData: function(val) {
+    var latestMessage = {};
+
+    for (var key in val) {
+      if (val.hasOwnProperty(key)) {
+        var obj = val[key];
+        for (var prop in obj) {
+          if (obj.hasOwnProperty(prop)) {
+
+              latestMessage.push({ prop : obj[prop]});
+          }
+        }
+      }
+    }
+    return latestMessage;
+  },
+
+  toObject: function(arr) {
+    var rv = {};
+    for (var i = 0; i < arr.length; ++i)
+    rv[i] = arr[i];
+    return rv;
+  }
+}
+
+},{"jquery":5}],35:[function(require,module,exports){
 var $ = require('jquery');
 
 module.exports = {
@@ -41063,16 +41308,18 @@ module.exports = {
       event.preventDefault();
       target.animate({
         scrollBottom: target.offset().top
-      }, 1000);
+      }, 200);
     }
   }
 }
 
-},{"jquery":5}],34:[function(require,module,exports){
+},{"jquery":5}],36:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
 var moment = require('moment');
+var notify = require('notifyjs');
+var data_functions = require('../data-functions');
 require('jquery-ui');
 
 // explicit installation required in module environments
@@ -41089,7 +41336,7 @@ module.exports = {
       children: [],
       // set up firebase connection
       firebase: {
-        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(4)
+        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25)
       },
       // anything within the ready function will run when
       // the application loads, call methods to initialize the app
@@ -41110,27 +41357,28 @@ module.exports = {
           var messages = this.$firebaseRefs.messages;
 
           messages.limitToLast(1).on("value", function(snapshot) {
-            console.log(snapshot.val());
-            var latestMessage = snapshot.val();
-            var latestMessageDate;
 
-            for (var key in latestMessage) {
-              if (latestMessage.hasOwnProperty(key)) {
-                var obj = latestMessage[key];
-                for (var prop in obj) {
-                  if (obj.hasOwnProperty(prop)) {
-                    if (prop == "date") {
-                      latestMessageDate = obj[prop];
-                    }
-                  }
-                }
-              }
-            }
-            console.log(latestMessageDate);
-            //toggle.scrollToNewMessage(snapshot.val());
-          }, function (errorObject) {
-            console.log("The read failed: " + errorObject.code);
+            var latestMessage = data_functions.getLatestMessageData(snapshot.val());
+            console.log(latestMessage);
+            var latestMessageJSON = JSON.stringify(latestMessage);
+            console.log(latestMessageJSON);
+            var latestMessageObj = JSON.parse(latestMessageJSON);
+            console.log(latestMessageObj.date);
+
           });
+          //
+          //   var myNotification = new Notify('Yo dawg!', {
+          //     body: 'This is an awesome notification',
+          //     notifyShow: onNotifyShow
+          //   });
+          //
+          //   function onNotifyShow() {
+          //     console.log('notification was shown!');
+          //   }
+          //   toggle.scrollToNewMessage();
+          // }, function (errorObject) {
+          //   console.log("The read failed: " + errorObject.code);
+          // });
         },
         // method to retrieve and set data
         fetchMessages: function() {
@@ -41160,7 +41408,7 @@ module.exports = {
   }
 }
 
-},{"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}],35:[function(require,module,exports){
+},{"../data-functions":34,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}],37:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
@@ -41238,4 +41486,4 @@ module.exports = {
   }
 }
 
-},{"./message-vue":34,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}]},{},[1]);
+},{"./message-vue":36,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":32,"vue-resource":21,"vuefire":33}]},{},[1]);

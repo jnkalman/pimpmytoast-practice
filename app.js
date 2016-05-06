@@ -12,6 +12,6 @@ $(document).ready(function() {
   });
 
   toggle.addButtonEnabledSwitch();
-
+  toggle.scrollToNewMessage();
   $("#name").focus();
 });

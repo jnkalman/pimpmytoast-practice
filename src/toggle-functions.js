@@ -21,7 +21,7 @@ module.exports = {
       event.preventDefault();
       target.animate({
         scrollBottom: target.offset().top
-      }, 1000);
+      }, 200);
     }
   }
 }
