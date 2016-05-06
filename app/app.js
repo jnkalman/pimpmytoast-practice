@@ -2,6 +2,7 @@ var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
 var moment = require('moment');
+var toggle = require('./toggle-functions');
 // explicit installation required in module environments
 require('jquery-ui');
 Vue.use(require('vuefire'));
@@ -85,18 +86,5 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
-  addButtonEnabledSwitch();
+  toggle.addButtonEnabledSwitch();
 });
-
-var addButtonEnabledSwitch = function() {
-  $('#submitButton').attr('disabled', true);
-
-  $('#messageText').on('keyup',function() {
-    var messageText_value = $('#messageText').val();
-    if(messageText_value != '') {
-          $('#submitButton').attr('disabled' , false);
-      } else {
-          $('#submitButton').attr('disabled' , true);
-      }
-  });
-};
