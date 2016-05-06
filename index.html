@@ -23,7 +23,7 @@
       <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Messenger</a>
       <ul class="nav navbar-nav navbar-right">
         <li>
-          <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5>
+          <!-- <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5> -->
           <!-- <h5 id="signedInName"><i class="fa fa-circle online" aria-hidden="true"></i> Signed in as {{ message.name }} </h5> -->
         </li>
       </ul>
@@ -36,33 +36,33 @@
   <!-- main body of our application -->
   <div class="container">
 
+    <div class="col-xs-12 col-md-9">
+      <!-- show the messages -->
+      <div class="col-xs-12">
+        <div class="list-group size-fixed">
+          <!-- using handlebars templates -->
+          <a href="#" class="list-group-item" v-for="message in messages">
+            <h4 class="list-group-item-heading">
+              {{ message.name }}
+            </h4>
 
-    <!-- show the messages -->
-    <div class="col-12">
-      <div class="list-group size-fixed">
-        <!-- using handlebars templates -->
-        <a href="#" class="list-group-item" v-for="message in messages">
-          <h4 class="list-group-item-heading">
-            {{ message.name }}
-          </h4>
+            <p class="list-group-item-text" v-if="message.description">{{ message.description }}</p>
 
-          <p class="list-group-item-text" v-if="message.description">{{ message.description }}</p>
+            <h6><em><small>
+              Sent:
+              {{ message.date }}
+            </em></small></h6>
 
-          <h6><em><small>
-            Sent:
-            {{ message.date }}
-          </em></small></h6>
+            <!-- <button class="btn btn-xs btn-danger" @click="deleteMessage(message)">Delete</button> -->
+          </a>
 
-          <!-- <button class="btn btn-xs btn-danger" @click="deleteMessage(message)">Delete</button> -->
-        </a>
-
+        </div>
       </div>
-    </div>
 
-    <!-- add a message form -->
-    <div class="col-12">
+      <!-- add a message form -->
+      <div class="col-xs-12">
 
-          <form id="messageForm" class="form-inline">
+        <form id="messageForm" class="form-inline">
           <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
           <div class="form-group">
             <input id="name" class="form-control" placeholder="Name" maxlength=16 v-model="message.name">
@@ -71,13 +71,27 @@
             <input id="messageText" class="form-control" placeholder="Message" v-model="message.description" ></input>
 
 
-          <!-- pass a method to be run on click (addmessage), could use on keyup or other messages that are less specific than angular's ng-click method -->
+            <!-- pass a method to be run on click (addmessage), could use on keyup or other messages that are less specific than angular's ng-click method -->
 
-          <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+            <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
           </div>
         </form>
+      </div>
     </div>
-
+    <div id="onlineUsers" class="col-xs-12 col-md-3">
+      <div class="panel panel-default">
+      <div class="panel-heading">
+        <h3 class="panel-title">Online Users</h3>
+      </div>
+      <div class="panel-body" contenteditable="true">
+        <ul v-for="user in users">
+          <li>{{ user.name }}</li>
+        </ul>
+      </div>
+      <div class="panel-footer" contenteditable="true">
+        <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5>
+      </div>
+    </div>
   </div>
 
   <!-- JS -->

@@ -1,21 +1,23 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var $ = require('jquery');
 var toggle = require('./src/toggle-functions');
-var messageVue = require('./src/message-vue');
-
+var messageVue = require('./src/view-models/message-vue');
+var onlineUsersVue = require('./src/view-models/online-users-vue');
 
 
 $(document).ready(function() {
   messageVue.instantiateMessageVue();
-
+  //onlineUsersVue.instantiateOnlineUsersVue();
   $("#messageForm").submit(function(e) {
     e.preventDefault();
   });
 
   toggle.addButtonEnabledSwitch();
+
+  $("#name").focus();
 });
 
-},{"./src/message-vue":33,"./src/toggle-functions":34,"jquery":5}],2:[function(require,module,exports){
+},{"./src/toggle-functions":33,"./src/view-models/message-vue":34,"./src/view-models/online-users-vue":35,"jquery":5}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -41039,6 +41041,25 @@ return /******/ (function(modules) { // webpackBootstrap
 ;
 },{}],33:[function(require,module,exports){
 var $ = require('jquery');
+
+module.exports = {
+
+  addButtonEnabledSwitch: function() {
+    $('#submitButton').attr('disabled', true);
+
+    $('#messageText').on('keyup',function() {
+      var messageText_value = $('#messageText').val();
+      if(messageText_value != '') {
+        $('#submitButton').attr('disabled' , false);
+      } else {
+        $('#submitButton').attr('disabled' , true);
+      }
+    });
+  }
+}
+
+},{"jquery":5}],34:[function(require,module,exports){
+var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
 var moment = require('moment');
@@ -41049,12 +41070,13 @@ Vue.use(require('vuefire'));
 Vue.use(require('vue-resource'));
 
 module.exports = {
-  /* EVENTS VUE */
+  /* Messages VUE */
 
   instantiateMessageVue : function() {
     new Vue({
       // target messages div
       el: '#messages',
+      children: [],
       // set up firebase connection
       firebase: {
         messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(4)
@@ -41102,6 +41124,8 @@ module.exports = {
             $("#name").hide();
             $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
             $("#signInStatusIcon").switchClass("offline", "online");
+            //broadcast added message
+            this.$broadcast('messageAdded', this.message.name);
           }
         }
 
@@ -41110,23 +41134,74 @@ module.exports = {
   }
 }
 
-},{"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}],34:[function(require,module,exports){
+},{"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}],35:[function(require,module,exports){
 var $ = require('jquery');
+var Vue = require('vue');
+var Firebase = require('firebase');
+var moment = require('moment');
+var messagesVue = require('./message-vue');
+require('jquery-ui');
+
+// explicit installation required in module environments
+Vue.use(require('vuefire'));
+Vue.use(require('vue-resource'));
 
 module.exports = {
+  /* Messages VUE */
 
-  addButtonEnabledSwitch: function() {
-    $('#submitButton').attr('disabled', true);
+  instantiateOnlineUsersVue : function() {
+    new Vue({
+      parent: messagesVue,
+      // target online users div
+      el: '#onlineUsers',
+      // set up firebase connection
+      firebase: {
+        onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
+      },
+      // anything within the ready function will run when
+      // the application loads, call methods to initialize the app
+      // with data
+      ready: function() {
+        // when the application loads, call the initialize data method
+        this.subscribe();
+      },
 
-    $('#messageText').on('keyup',function() {
-      var messageText_value = $('#messageText').val();
-      if(messageText_value != '') {
-        $('#submitButton').attr('disabled' , false);
-      } else {
-        $('#submitButton').attr('disabled' , true);
+      // initial object
+      data: {
+        onlineUser: { name: '' }
+      },
+
+      // custom methods registered here
+      methods: {
+        subscribe: function() {
+          var onlineUsers = this.$firebaseRefs.onlineUsers;
+
+          onlineUsers.on("messageAdded", function(name) {
+            console.log(name.val());
+            console.log("hey i got a message");
+          }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+        },
+
+        // adds an message to the existing messages array
+        addUser: function() {
+          // if (this.message.name) {
+          //   this.message.date = moment().format('YYYY-MM-DD HH:mm:ss');
+          //   var messages = this.$firebaseRefs.messages;
+          //   // add message
+          //   messages.push(this.message);
+          //   // reset message
+          //   this.message = {name: this.message.name, description: '', date: ''};
+          //   $("#name").hide();
+          //   $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
+          //   $("#signInStatusIcon").switchClass("offline", "online");
+          // }
+        }
+
       }
     });
   }
 }
 
-},{"jquery":5}]},{},[1]);
+},{"./message-vue":34,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}]},{},[1]);

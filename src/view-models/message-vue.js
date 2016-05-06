@@ -9,12 +9,13 @@ Vue.use(require('vuefire'));
 Vue.use(require('vue-resource'));
 
 module.exports = {
-  /* EVENTS VUE */
+  /* Messages VUE */
 
   instantiateMessageVue : function() {
     new Vue({
       // target messages div
       el: '#messages',
+      children: [],
       // set up firebase connection
       firebase: {
         messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(4)
@@ -62,6 +63,8 @@ module.exports = {
             $("#name").hide();
             $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
             $("#signInStatusIcon").switchClass("offline", "online");
+            //broadcast added message
+            this.$broadcast('messageAdded', this.message.name);
           }
         }
 
