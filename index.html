@@ -4,7 +4,10 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Vue</title>
+  <link rel="icon"
+      type="image/png"
+      href="favicon.ico">
+  <title>Messenger</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
@@ -17,7 +20,7 @@
   <!-- navigation bar -->
   <nav class="navbar navbar-default">
     <div class="container-fluid">
-      <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Messaging</a>
+      <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Messenger</a>
       <ul class="nav navbar-nav navbar-right">
         <li>
           <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5>
@@ -70,7 +73,7 @@
 
           <!-- pass a method to be run on click (addmessage), could use on keyup or other messages that are less specific than angular's ng-click method -->
 
-          <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+          <button id="submitButton" class="btn btn-primary" @click= "addMessage" ><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
           </div>
         </form>
     </div>
