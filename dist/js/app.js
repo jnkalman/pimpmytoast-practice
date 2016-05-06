@@ -1,7 +1,7 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 var $ = require('jquery');
-var toggle = require('./toggle-functions');
-var messageVue = require('./message-vue');
+var toggle = require('./src/toggle-functions');
+var messageVue = require('./src/message-vue');
 
 
 
@@ -15,99 +15,7 @@ $(document).ready(function() {
   toggle.addButtonEnabledSwitch();
 });
 
-},{"./message-vue":2,"./toggle-functions":3,"jquery":7}],2:[function(require,module,exports){
-var $ = require('jquery');
-var Vue = require('vue');
-var Firebase = require('firebase');
-var moment = require('moment');
-require('jquery-ui');
-
-// explicit installation required in module environments
-Vue.use(require('vuefire'));
-Vue.use(require('vue-resource'));
-
-module.exports = {
-  /* EVENTS VUE */
-
-  instantiateMessageVue : function() {
-    new Vue({
-      // target messages div
-      el: '#messages',
-      // set up firebase connection
-      firebase: {
-        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(4)
-      },
-      // anything within the ready function will run when
-      // the application loads, call methods to initialize the app
-      // with data
-      ready: function() {
-        // when the application loads, call the initialize data method
-        this.subscribe();
-      },
-
-      // initial object
-      data: {
-        message: { name: '', description: '', date: '' }
-      },
-
-      // custom methods registered here
-      methods: {
-        subscribe: function() {
-          var messages = this.$firebaseRefs.messages;
-
-          messages.on("value", function(snapshot) {
-            console.log(snapshot.val());
-            console.log("hey i got a message");
-          }, function (errorObject) {
-            console.log("The read failed: " + errorObject.code);
-          });
-        },
-        // method to retrieve and set data
-        fetchMessages: function() {
-
-
-        },
-
-        // adds an message to the existing messages array
-        addMessage: function() {
-          if (this.message.name) {
-            this.message.date = moment().format('YYYY-MM-DD HH:mm:ss');
-            var messages = this.$firebaseRefs.messages;
-            // add message
-            messages.push(this.message);
-            // reset message
-            this.message = {name: this.message.name, description: '', date: ''};
-            $("#name").hide();
-            $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
-            $("#signInStatusIcon").switchClass("offline", "online");
-          }
-        }
-
-      }
-    });
-  }
-}
-
-},{"firebase":5,"jquery":7,"jquery-ui":6,"moment":8,"vue":33,"vue-resource":22,"vuefire":34}],3:[function(require,module,exports){
-var $ = require('jquery');
-
-module.exports = {
-
-  addButtonEnabledSwitch: function() {
-    $('#submitButton').attr('disabled', true);
-
-    $('#messageText').on('keyup',function() {
-      var messageText_value = $('#messageText').val();
-      if(messageText_value != '') {
-        $('#submitButton').attr('disabled' , false);
-      } else {
-        $('#submitButton').attr('disabled' , true);
-      }
-    });
-  }
-}
-
-},{"jquery":7}],4:[function(require,module,exports){
+},{"./src/message-vue":33,"./src/toggle-functions":34,"jquery":5}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -200,7 +108,7 @@ process.chdir = function (dir) {
 };
 process.umask = function() { return 0; };
 
-},{}],5:[function(require,module,exports){
+},{}],3:[function(require,module,exports){
 /*! @license Firebase v2.4.2
     License: https://www.firebase.com/terms/terms-of-service.html */
 (function() {var h,n=this;function p(a){return void 0!==a}function aa(){}function ba(a){a.yb=function(){return a.zf?a.zf:a.zf=new a}}
@@ -482,7 +390,7 @@ X.prototype.Ze=function(a,b){D("Firebase.resetPassword",1,2,arguments.length);sg
 
 module.exports = Firebase;
 
-},{}],6:[function(require,module,exports){
+},{}],4:[function(require,module,exports){
 var jQuery = require('jquery');
 
 /*! jQuery UI - v1.10.3 - 2013-05-03
@@ -15489,7 +15397,7 @@ $.widget( "ui.tooltip", {
 
 }( jQuery ) );
 
-},{"jquery":7}],7:[function(require,module,exports){
+},{"jquery":5}],5:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v2.2.3
  * http://jquery.com/
@@ -25333,7 +25241,7 @@ if ( !noGlobal ) {
 return jQuery;
 }));
 
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 //! moment.js
 //! version : 2.13.0
 //! authors : Tim Wood, Iskren Chernev, Moment.js contributors
@@ -29374,7 +29282,7 @@ return jQuery;
     return _moment;
 
 }));
-},{}],9:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 /**
  * Before Interceptor.
  */
@@ -29394,7 +29302,7 @@ module.exports = {
 
 };
 
-},{"../util":32}],10:[function(require,module,exports){
+},{"../util":30}],8:[function(require,module,exports){
 /**
  * Base client.
  */
@@ -29461,7 +29369,7 @@ function parseHeaders(str) {
     return headers;
 }
 
-},{"../../promise":25,"../../util":32,"./xhr":13}],11:[function(require,module,exports){
+},{"../../promise":23,"../../util":30,"./xhr":11}],9:[function(require,module,exports){
 /**
  * JSONP client.
  */
@@ -29511,7 +29419,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":25,"../../util":32}],12:[function(require,module,exports){
+},{"../../promise":23,"../../util":30}],10:[function(require,module,exports){
 /**
  * XDomain client (Internet Explorer).
  */
@@ -29550,7 +29458,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":25,"../../util":32}],13:[function(require,module,exports){
+},{"../../promise":23,"../../util":30}],11:[function(require,module,exports){
 /**
  * XMLHttp client.
  */
@@ -29602,7 +29510,7 @@ module.exports = function (request) {
     });
 };
 
-},{"../../promise":25,"../../util":32}],14:[function(require,module,exports){
+},{"../../promise":23,"../../util":30}],12:[function(require,module,exports){
 /**
  * CORS Interceptor.
  */
@@ -29641,7 +29549,7 @@ function crossOrigin(request) {
     return (requestUrl.protocol !== originUrl.protocol || requestUrl.host !== originUrl.host);
 }
 
-},{"../util":32,"./client/xdr":12}],15:[function(require,module,exports){
+},{"../util":30,"./client/xdr":10}],13:[function(require,module,exports){
 /**
  * Header Interceptor.
  */
@@ -29669,7 +29577,7 @@ module.exports = {
 
 };
 
-},{"../util":32}],16:[function(require,module,exports){
+},{"../util":30}],14:[function(require,module,exports){
 /**
  * Service for sending network requests.
  */
@@ -29769,7 +29677,7 @@ Http.headers = {
 
 module.exports = _.http = Http;
 
-},{"../promise":25,"../util":32,"./before":9,"./client":10,"./cors":14,"./header":15,"./interceptor":17,"./jsonp":18,"./method":19,"./mime":20,"./timeout":21}],17:[function(require,module,exports){
+},{"../promise":23,"../util":30,"./before":7,"./client":8,"./cors":12,"./header":13,"./interceptor":15,"./jsonp":16,"./method":17,"./mime":18,"./timeout":19}],15:[function(require,module,exports){
 /**
  * Interceptor factory.
  */
@@ -29816,7 +29724,7 @@ function when(value, fulfilled, rejected) {
     return promise.then(fulfilled, rejected);
 }
 
-},{"../promise":25,"../util":32}],18:[function(require,module,exports){
+},{"../promise":23,"../util":30}],16:[function(require,module,exports){
 /**
  * JSONP Interceptor.
  */
@@ -29836,7 +29744,7 @@ module.exports = {
 
 };
 
-},{"./client/jsonp":11}],19:[function(require,module,exports){
+},{"./client/jsonp":9}],17:[function(require,module,exports){
 /**
  * HTTP method override Interceptor.
  */
@@ -29855,7 +29763,7 @@ module.exports = {
 
 };
 
-},{}],20:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 /**
  * Mime Interceptor.
  */
@@ -29893,7 +29801,7 @@ module.exports = {
 
 };
 
-},{"../util":32}],21:[function(require,module,exports){
+},{"../util":30}],19:[function(require,module,exports){
 /**
  * Timeout Interceptor.
  */
@@ -29925,7 +29833,7 @@ module.exports = function () {
     };
 };
 
-},{}],22:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 /**
  * Install plugin.
  */
@@ -29980,7 +29888,7 @@ if (window.Vue) {
 
 module.exports = install;
 
-},{"./http":16,"./promise":25,"./resource":26,"./url":27,"./util":32}],23:[function(require,module,exports){
+},{"./http":14,"./promise":23,"./resource":24,"./url":25,"./util":30}],21:[function(require,module,exports){
 /**
  * Promises/A+ polyfill v1.1.4 (https://github.com/bramstein/promis)
  */
@@ -30161,7 +30069,7 @@ p.catch = function (onRejected) {
 
 module.exports = Promise;
 
-},{"../util":32}],24:[function(require,module,exports){
+},{"../util":30}],22:[function(require,module,exports){
 /**
  * URL Template v2.0.6 (https://github.com/bramstein/url-template)
  */
@@ -30313,7 +30221,7 @@ exports.encodeReserved = function (str) {
     }).join('');
 };
 
-},{}],25:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 /**
  * Promise adapter.
  */
@@ -30424,7 +30332,7 @@ p.always = function (callback) {
 
 module.exports = Promise;
 
-},{"./lib/promise":23,"./util":32}],26:[function(require,module,exports){
+},{"./lib/promise":21,"./util":30}],24:[function(require,module,exports){
 /**
  * Service for interacting with RESTful services.
  */
@@ -30536,7 +30444,7 @@ Resource.actions = {
 
 module.exports = _.resource = Resource;
 
-},{"./util":32}],27:[function(require,module,exports){
+},{"./util":30}],25:[function(require,module,exports){
 /**
  * Service for URL templating.
  */
@@ -30668,7 +30576,7 @@ function serialize(params, obj, scope) {
 
 module.exports = _.url = Url;
 
-},{"../util":32,"./legacy":28,"./query":29,"./root":30,"./template":31}],28:[function(require,module,exports){
+},{"../util":30,"./legacy":26,"./query":27,"./root":28,"./template":29}],26:[function(require,module,exports){
 /**
  * Legacy Transform.
  */
@@ -30716,7 +30624,7 @@ function encodeUriQuery(value, spaces) {
         replace(/%20/g, (spaces ? '%20' : '+'));
 }
 
-},{"../util":32}],29:[function(require,module,exports){
+},{"../util":30}],27:[function(require,module,exports){
 /**
  * Query Parameter Transform.
  */
@@ -30742,7 +30650,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":32}],30:[function(require,module,exports){
+},{"../util":30}],28:[function(require,module,exports){
 /**
  * Root Prefix Transform.
  */
@@ -30760,7 +30668,7 @@ module.exports = function (options, next) {
     return url;
 };
 
-},{"../util":32}],31:[function(require,module,exports){
+},{"../util":30}],29:[function(require,module,exports){
 /**
  * URL Template (RFC 6570) Transform.
  */
@@ -30778,7 +30686,7 @@ module.exports = function (options) {
     return url;
 };
 
-},{"../lib/url-template":24}],32:[function(require,module,exports){
+},{"../lib/url-template":22}],30:[function(require,module,exports){
 /**
  * Utility functions.
  */
@@ -30902,7 +30810,7 @@ function merge(target, source, deep) {
     }
 }
 
-},{}],33:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 (function (process,global){
 /*!
  * Vue.js v1.0.21
@@ -40828,7 +40736,7 @@ setTimeout(function () {
 
 module.exports = Vue;
 }).call(this,require('_process'),typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{"_process":4}],34:[function(require,module,exports){
+},{"_process":2}],32:[function(require,module,exports){
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
@@ -41129,4 +41037,96 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ ])
 });
 ;
-},{}]},{},[1]);
+},{}],33:[function(require,module,exports){
+var $ = require('jquery');
+var Vue = require('vue');
+var Firebase = require('firebase');
+var moment = require('moment');
+require('jquery-ui');
+
+// explicit installation required in module environments
+Vue.use(require('vuefire'));
+Vue.use(require('vue-resource'));
+
+module.exports = {
+  /* EVENTS VUE */
+
+  instantiateMessageVue : function() {
+    new Vue({
+      // target messages div
+      el: '#messages',
+      // set up firebase connection
+      firebase: {
+        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(4)
+      },
+      // anything within the ready function will run when
+      // the application loads, call methods to initialize the app
+      // with data
+      ready: function() {
+        // when the application loads, call the initialize data method
+        this.subscribe();
+      },
+
+      // initial object
+      data: {
+        message: { name: '', description: '', date: '' }
+      },
+
+      // custom methods registered here
+      methods: {
+        subscribe: function() {
+          var messages = this.$firebaseRefs.messages;
+
+          messages.on("value", function(snapshot) {
+            console.log(snapshot.val());
+            console.log("hey i got a message");
+          }, function (errorObject) {
+            console.log("The read failed: " + errorObject.code);
+          });
+        },
+        // method to retrieve and set data
+        fetchMessages: function() {
+
+
+        },
+
+        // adds an message to the existing messages array
+        addMessage: function() {
+          if (this.message.name) {
+            this.message.date = moment().format('YYYY-MM-DD HH:mm:ss');
+            var messages = this.$firebaseRefs.messages;
+            // add message
+            messages.push(this.message);
+            // reset message
+            this.message = {name: this.message.name, description: '', date: ''};
+            $("#name").hide();
+            $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
+            $("#signInStatusIcon").switchClass("offline", "online");
+          }
+        }
+
+      }
+    });
+  }
+}
+
+},{"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":31,"vue-resource":20,"vuefire":32}],34:[function(require,module,exports){
+var $ = require('jquery');
+
+module.exports = {
+
+  addButtonEnabledSwitch: function() {
+    $('#submitButton').attr('disabled', true);
+
+    $('#messageText').on('keyup',function() {
+      var messageText_value = $('#messageText').val();
+      if(messageText_value != '') {
+        $('#submitButton').attr('disabled' , false);
+      } else {
+        $('#submitButton').attr('disabled' , true);
+      }
+    });
+  }
+}
+
+},{"jquery":5}]},{},[1]);

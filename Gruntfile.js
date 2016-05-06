@@ -28,14 +28,14 @@ module.exports = function(grunt) {
 
     // lint code
     eslint: {
-		    target: ['Gruntfile.js','app/**/*.js']
+		    target: ['Gruntfile.js','src/**/*.js', 'app.js']
     },
 
     // modularize code
     browserify: {
       dist: {
         files: {
-          'dist/js/app.js' : 'app/app.js'
+          'dist/js/app.js' : './app.js'
         }
       }
     },
@@ -84,7 +84,7 @@ module.exports = function(grunt) {
       },
       dist: {
         files: {
-          'dist/js/app.js': 'app/app.js'
+          'dist/js/app.js': './app.js'
         }
       }
     },

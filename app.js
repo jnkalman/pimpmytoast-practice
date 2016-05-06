@@ -1,6 +1,6 @@
 var $ = require('jquery');
-var toggle = require('./toggle-functions');
-var messageVue = require('./message-vue');
+var toggle = require('./src/toggle-functions');
+var messageVue = require('./src/message-vue');
 
 
 
