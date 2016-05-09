@@ -42,5 +42,12 @@ module.exports = {
 
   onPermissionDenied: function() {
     console.warn('Permission has been denied by the user');
+  },
+
+  playNotificationSound: function(volume) {
+    // play notification sound
+    var notificationSound = new Audio('../sounds/notification-sound.mp3');
+    notificationSound.volume = volume;
+    notificationSound.play();
   }
 }

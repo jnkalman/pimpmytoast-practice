@@ -6,8 +6,9 @@ var onlineUsersVue = require('./src/view-models/online-users-vue');
 
 
 $(document).ready(function() {
+    onlineUsersVue.instantiateOnlineUsersVue();
   messageVue.instantiateMessageVue();
-  //onlineUsersVue.instantiateOnlineUsersVue();
+
   $("#messageForm").submit(function(e) {
     e.preventDefault();
   });
@@ -41299,6 +41300,13 @@ module.exports = {
 
   onPermissionDenied: function() {
     console.warn('Permission has been denied by the user');
+  },
+
+  playNotificationSound: function(volume) {
+    // play notification sound
+    var notificationSound = new Audio('../sounds/notification-sound.mp3');
+    notificationSound.volume = volume;
+    notificationSound.play();
   }
 }
 
@@ -41383,7 +41391,7 @@ module.exports = {
     new Vue({
       // target messages div
       el: '#messages',
-      children: [],
+      children: ['online-users-vue'],
       // set up firebase connection
       firebase: {
         messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25)
@@ -41394,6 +41402,7 @@ module.exports = {
       ready: function() {
         // when the application loads, call the initialize data method
         this.subscribe();
+        toggle_functions.scrollToNewMessage();
       },
 
       // initial object
@@ -41414,10 +41423,7 @@ module.exports = {
             if (!document.hasFocus()) {
               alert_functions.showNotification(latestMessage);
             }
-            // play notification sound
-            var notificationSound = new Audio('../../sounds/notification-sound.mp3');
-            notificationSound.volume = 0.35;
-            notificationSound.play();
+            alert_functions.playNotificationSound(0.35);
             toggle_functions.scrollToNewMessage();
           });
 
