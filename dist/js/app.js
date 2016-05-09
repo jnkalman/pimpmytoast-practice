@@ -17,7 +17,7 @@ $(document).ready(function() {
   $("#name").focus();
 });
 
-},{"./src/toggle-functions":35,"./src/view-models/message-vue":36,"./src/view-models/online-users-vue":37,"jquery":5}],2:[function(require,module,exports){
+},{"./src/toggle-functions":36,"./src/view-models/message-vue":37,"./src/view-models/online-users-vue":38,"jquery":5}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -41255,24 +41255,72 @@ return /******/ (function(modules) { // webpackBootstrap
 });
 ;
 },{}],34:[function(require,module,exports){
+var Notify = require('notifyjs');
+
+module.exports = {
+
+  showNotification: function(message) {
+    var notification = new Notify(message.name, {
+      body: message.description,
+      tag: message.date,
+      notifyShow: this.onShowNotification,
+      notifyClose: this.onCloseNotification,
+      notifyClick: this.onClickNotification,
+      notifyError: this.onErrorNotification,
+      timeout: 4
+    });
+
+    if (!Notify.needsPermission) {
+      notification.show();
+    } else if (Notify.isSupported()) {
+      Notify.requestPermission(this.onPermissionGranted, this.onPermissionDenied);
+    }
+  },
+  onShowNotification: function() {
+    console.log('notification is shown!');
+  },
+
+  onCloseNotification: function() {
+    console.log('notification is closed!');
+  },
+
+  onClickNotification: function() {
+    console.log('notification was clicked!');
+  },
+
+  onErrorNotification: function() {
+    console.error('Error showing notification. You may need to request permission.');
+  },
+
+  onPermissionGranted: function() {
+    console.log('Permission has been granted by the user');
+    this.showNotification();
+  },
+
+  onPermissionDenied: function() {
+    console.warn('Permission has been denied by the user');
+  }
+}
+
+},{"notifyjs":7}],35:[function(require,module,exports){
 var $ = require('jquery');
 
 module.exports = {
 
   getLatestMessageData: function(val) {
-    var latestMessage = [];
-
+    var latestMessage = {name: '', date: '', description: ''};
     for (var key in val) {
       if (val.hasOwnProperty(key)) {
         var obj = val[key];
         for (var prop in obj) {
           if (obj.hasOwnProperty(prop)) {
-            // debug and look at console for current progress, monday Jake! Good luck!
-              latestMessage.push({ prop : obj[prop]});
+              latestMessage[prop] = obj[prop];
           }
         }
       }
     }
+
+
     return latestMessage;
   },
 
@@ -41284,7 +41332,7 @@ module.exports = {
   }
 }
 
-},{"jquery":5}],35:[function(require,module,exports){
+},{"jquery":5}],36:[function(require,module,exports){
 var $ = require('jquery');
 
 module.exports = {
@@ -41313,14 +41361,15 @@ module.exports = {
   }
 }
 
-},{"jquery":5}],36:[function(require,module,exports){
+},{"jquery":5}],37:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
 var moment = require('moment');
 var notify = require('notifyjs');
 var data_functions = require('../data-functions');
-var toggle = require('../toggle-functions');
+var toggle_functions = require('../toggle-functions');
+var alert_functions = require('../alert-functions');
 require('jquery-ui');
 
 // explicit installation required in module environments
@@ -41358,28 +41407,20 @@ module.exports = {
           var messages = this.$firebaseRefs.messages;
 
           messages.limitToLast(1).on("value", function(snapshot) {
-            // CHECK HERE MONDAY JAKE
-            // var latestMessage = data_functions.getLatestMessageData(snapshot.val());
-            // console.log(latestMessage);
-            // var latestMessageJSON = JSON.stringify(latestMessage);
-            // console.log(latestMessageJSON);
-            // var latestMessageObj = JSON.parse(latestMessageJSON);
-            // console.log(latestMessageObj.date);
-            toggle.scrollToNewMessage();
+            //CHECK HERE, MONDAY JAKE
+            var latestMessage = data_functions.getLatestMessageData(snapshot.val());
+            console.log(latestMessage);
+            // if not current window, show notification
+            if (!document.hasFocus()) {
+              alert_functions.showNotification(latestMessage);
+            }
+            // play notification sound
+            var notificationSound = new Audio('../../sounds/notification-sound.mp3');
+            notificationSound.volume = 0.35;
+            notificationSound.play();
+            toggle_functions.scrollToNewMessage();
           });
-          //
-          //   var myNotification = new Notify('Yo dawg!', {
-          //     body: 'This is an awesome notification',
-          //     notifyShow: onNotifyShow
-          //   });
-          //
-          //   function onNotifyShow() {
-          //     console.log('notification was shown!');
-          //   }
-          //   toggle.scrollToNewMessage();
-          // }, function (errorObject) {
-          //   console.log("The read failed: " + errorObject.code);
-          // });
+
         },
         // method to retrieve and set data
         fetchMessages: function() {
@@ -41409,7 +41450,7 @@ module.exports = {
   }
 }
 
-},{"../data-functions":34,"../toggle-functions":35,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}],37:[function(require,module,exports){
+},{"../alert-functions":34,"../data-functions":35,"../toggle-functions":36,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}],38:[function(require,module,exports){
 var $ = require('jquery');
 var Vue = require('vue');
 var Firebase = require('firebase');
@@ -41487,4 +41528,4 @@ module.exports = {
   }
 }
 
-},{"./message-vue":36,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":32,"vue-resource":21,"vuefire":33}]},{},[1]);
+},{"./message-vue":37,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":32,"vue-resource":21,"vuefire":33}]},{},[1]);

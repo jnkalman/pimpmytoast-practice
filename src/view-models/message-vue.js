@@ -4,7 +4,8 @@ var Firebase = require('firebase');
 var moment = require('moment');
 var notify = require('notifyjs');
 var data_functions = require('../data-functions');
-var toggle = require('../toggle-functions');
+var toggle_functions = require('../toggle-functions');
+var alert_functions = require('../alert-functions');
 require('jquery-ui');
 
 // explicit installation required in module environments
@@ -42,28 +43,20 @@ module.exports = {
           var messages = this.$firebaseRefs.messages;
 
           messages.limitToLast(1).on("value", function(snapshot) {
-            // CHECK HERE MONDAY JAKE
-            // var latestMessage = data_functions.getLatestMessageData(snapshot.val());
-            // console.log(latestMessage);
-            // var latestMessageJSON = JSON.stringify(latestMessage);
-            // console.log(latestMessageJSON);
-            // var latestMessageObj = JSON.parse(latestMessageJSON);
-            // console.log(latestMessageObj.date);
-            toggle.scrollToNewMessage();
+            //CHECK HERE, MONDAY JAKE
+            var latestMessage = data_functions.getLatestMessageData(snapshot.val());
+            console.log(latestMessage);
+            // if not current window, show notification
+            if (!document.hasFocus()) {
+              alert_functions.showNotification(latestMessage);
+            }
+            // play notification sound
+            var notificationSound = new Audio('../../sounds/notification-sound.mp3');
+            notificationSound.volume = 0.35;
+            notificationSound.play();
+            toggle_functions.scrollToNewMessage();
           });
-          //
-          //   var myNotification = new Notify('Yo dawg!', {
-          //     body: 'This is an awesome notification',
-          //     notifyShow: onNotifyShow
-          //   });
-          //
-          //   function onNotifyShow() {
-          //     console.log('notification was shown!');
-          //   }
-          //   toggle.scrollToNewMessage();
-          // }, function (errorObject) {
-          //   console.log("The read failed: " + errorObject.code);
-          // });
+
         },
         // method to retrieve and set data
         fetchMessages: function() {
