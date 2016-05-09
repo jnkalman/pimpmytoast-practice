@@ -13,3 +13,16 @@ $(document).ready(function() {
   toggle.scrollToNewMessage();
   $("#name").focus();
 });
+
+// var rootInstance = new Vue({
+// 	el: '#app',
+//   data: {
+//     message: { name: '', description: '', date: '' }
+//     user: { name: '' }
+//   },
+//   firebase: {
+//     messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
+//     onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
+//   },
+//   components:{'chat-component':chat},
+// });

@@ -18,11 +18,11 @@ module.exports = {
   instantiateMessageVue : function() {
     new Vue({
       // target messages div
-      el: '#messages',
-      children: ['online-users-vue'],
+      el: '#app',
       // set up firebase connection
       firebase: {
-        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25)
+        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
+        onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
       },
       // anything within the ready function will run when
       // the application loads, call methods to initialize the app
@@ -35,7 +35,12 @@ module.exports = {
 
       // initial object
       data: {
-        message: { name: '', description: '', date: '' }
+        message: { name: '', description: '', date: '' },
+        user: { name: '' }
+      },
+
+      components: {
+        'chat-component': chat
       },
 
       // custom methods registered here
@@ -54,11 +59,6 @@ module.exports = {
             alert_functions.playNotificationSound(0.35);
             toggle_functions.scrollToNewMessage();
           });
-
-        },
-        // method to retrieve and set data
-        fetchMessages: function() {
-
 
         },
 
@@ -82,4 +82,13 @@ module.exports = {
       }
     });
   }
+
 }
+
+
+  var chat = {
+    template: "#chatWindow",
+    replace: true,
+    methods: {},
+    props: ['messages']
+  };

@@ -2,13 +2,10 @@
 var $ = require('jquery');
 var toggle = require('./src/toggle-functions');
 var messageVue = require('./src/view-models/message-vue');
-var onlineUsersVue = require('./src/view-models/online-users-vue');
 
 
 $(document).ready(function() {
-    onlineUsersVue.instantiateOnlineUsersVue();
   messageVue.instantiateMessageVue();
-
   $("#messageForm").submit(function(e) {
     e.preventDefault();
   });
@@ -18,7 +15,20 @@ $(document).ready(function() {
   $("#name").focus();
 });
 
-},{"./src/toggle-functions":36,"./src/view-models/message-vue":37,"./src/view-models/online-users-vue":38,"jquery":5}],2:[function(require,module,exports){
+// var rootInstance = new Vue({
+// 	el: '#app',
+//   data: {
+//     message: { name: '', description: '', date: '' }
+//     user: { name: '' }
+//   },
+//   firebase: {
+//     messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
+//     onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
+//   },
+//   components:{'chat-component':chat},
+// });
+
+},{"./src/toggle-functions":36,"./src/view-models/message-vue":37,"jquery":5}],2:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
@@ -41390,11 +41400,11 @@ module.exports = {
   instantiateMessageVue : function() {
     new Vue({
       // target messages div
-      el: '#messages',
-      children: ['online-users-vue'],
+      el: '#app',
       // set up firebase connection
       firebase: {
-        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25)
+        messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
+        onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
       },
       // anything within the ready function will run when
       // the application loads, call methods to initialize the app
@@ -41407,7 +41417,12 @@ module.exports = {
 
       // initial object
       data: {
-        message: { name: '', description: '', date: '' }
+        message: { name: '', description: '', date: '' },
+        user: { name: '' }
+      },
+
+      components: {
+        'chat-component': chat
       },
 
       // custom methods registered here
@@ -41426,11 +41441,6 @@ module.exports = {
             alert_functions.playNotificationSound(0.35);
             toggle_functions.scrollToNewMessage();
           });
-
-        },
-        // method to retrieve and set data
-        fetchMessages: function() {
-
 
         },
 
@@ -41454,84 +41464,15 @@ module.exports = {
       }
     });
   }
+
 }
 
-},{"../alert-functions":34,"../data-functions":35,"../toggle-functions":36,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}],38:[function(require,module,exports){
-var $ = require('jquery');
-var Vue = require('vue');
-var Firebase = require('firebase');
-var moment = require('moment');
-var messagesVue = require('./message-vue');
-require('jquery-ui');
 
-// explicit installation required in module environments
-Vue.use(require('vuefire'));
-Vue.use(require('vue-resource'));
+  var chat = {
+    template: "#chatWindow",
+    replace: true,
+    methods: {},
+    props: ['messages']
+  };
 
-module.exports = {
-  /* Messages VUE */
-
-  instantiateOnlineUsersVue : function() {
-    new Vue({
-      parent: messagesVue,
-      // target online users div
-      el: '#onlineUsers',
-      // set up firebase connection
-      firebase: {
-        onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
-      },
-      // anything within the ready function will run when
-      // the application loads, call methods to initialize the app
-      // with data
-      ready: function() {
-        // when the application loads, call the initialize data method
-        this.subscribe();
-      },
-
-      // initial object
-      data: {
-        onlineUser: { name: '' }
-      },
-      events: {
-        // messageAdded: function(name) {
-        //   console.log(name.val());
-        //   console.log("hey i got a message");
-        // }, function (errorObject) {
-        //   console.log("The read failed: " + errorObject.code);
-        // });
-        // }
-      },
-      // custom methods registered here
-      methods: {
-        // subscribe: function() {
-        //   var onlineUsers = this.$firebaseRefs.onlineUsers;
-        //
-        //   onlineUsers.on("messageAdded", function(name) {
-        //     console.log(name.val());
-        //     console.log("hey i got a message");
-        //   }, function (errorObject) {
-        //     console.log("The read failed: " + errorObject.code);
-        //   });
-        // },
-
-        // adds an message to the existing messages array
-        addUser: function() {
-          // if (this.message.name) {
-          //   this.message.date = moment().format('YYYY-MM-DD HH:mm:ss');
-          //   var messages = this.$firebaseRefs.messages;
-          //   // add message
-          //   messages.push(this.message);
-          //   // reset message
-          //   this.message = {name: this.message.name, description: '', date: ''};
-          //   $("#name").hide();
-          //   $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
-          //   $("#signInStatusIcon").switchClass("offline", "online");
-          // }
-        }
-
-      }
-    });
-  }
-}
-
-},{"./message-vue":37,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"vue":32,"vue-resource":21,"vuefire":33}]},{},[1]);
+},{"../alert-functions":34,"../data-functions":35,"../toggle-functions":36,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}]},{},[1]);
