@@ -4,7 +4,7 @@ var messageVue = require('./src/view-models/message-vue');
 
 
 $(document).ready(function() {
-  messageVue.instantiateMessageVue();
+  messageVue.instantiateVue();
   $("#messageForm").submit(function(e) {
     e.preventDefault();
   });

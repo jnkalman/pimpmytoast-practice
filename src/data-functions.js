@@ -2,21 +2,20 @@ var $ = require('jquery');
 
 module.exports = {
 
-  getLatestMessageData: function(val) {
-    var latestMessage = {name: '', date: '', description: ''};
+  getData: function(val, format) {
     for (var key in val) {
       if (val.hasOwnProperty(key)) {
         var obj = val[key];
         for (var prop in obj) {
           if (obj.hasOwnProperty(prop)) {
-              latestMessage[prop] = obj[prop];
+              format[prop] = obj[prop];
           }
         }
       }
     }
 
 
-    return latestMessage;
+    return format;
   },
 
   toObject: function(arr) {

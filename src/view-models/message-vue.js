@@ -15,7 +15,7 @@ Vue.use(require('vue-resource'));
 module.exports = {
   /* Messages VUE */
 
-  instantiateMessageVue : function() {
+  instantiateVue : function() {
     new Vue({
       // target messages div
       el: '#app',
@@ -50,7 +50,7 @@ module.exports = {
 
           messages.limitToLast(1).on("value", function(snapshot) {
             //CHECK HERE, MONDAY JAKE
-            var latestMessage = data_functions.getLatestMessageData(snapshot.val());
+            var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
             console.log(latestMessage);
             // if not current window, show notification
             if (!document.hasFocus()) {
@@ -76,9 +76,30 @@ module.exports = {
             $("#signInStatusIcon").switchClass("offline", "online");
             //broadcast added message
             this.$broadcast('messageAdded', this.message.name);
-          }
-        }
+            this.userExists(this.message.name);
 
+            // if (!userExists(this.message.name)) {
+            //   users.
+            // }
+          }
+        },
+
+        addUser: function() {
+          // if (this.)
+        },
+
+        userExists: function(username) {
+          var users = this.$firebaseRefs.onlineUsers;
+          var user = {name : ''};
+
+          users.once("value", function(snapshot) {
+
+          //  if (snapshot.val().length) {
+              console.log(data_functions.getData(snapshot.val(), {name: ''}));
+          //  }
+          });
+
+        }
       }
     });
   }

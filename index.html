@@ -102,5 +102,12 @@
     </em></small></h6>
   </li>
   </script>
+
+  <script type="text/x-template" id="onlineUsersWindow">
+  <li class="list-group-item" v-for="user in onlineUsers">
+    <h4 class="list-group-item-text">
+      {{ user.name }}
+    </h4>
+  </script>
 </body>
 </html>
