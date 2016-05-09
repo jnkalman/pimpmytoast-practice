@@ -76,30 +76,34 @@ module.exports = {
             $("#signInStatusIcon").switchClass("offline", "online");
             //broadcast added message
             this.$broadcast('messageAdded', this.message.name);
-            this.userExists(this.message.name);
-
+            // this.userExists(this.message.name);
+            this.addUser(this.message.name);
             // if (!userExists(this.message.name)) {
             //   users.
             // }
           }
         },
 
-        addUser: function() {
-          // if (this.)
-        },
-
-        userExists: function(username) {
-          var users = this.$firebaseRefs.onlineUsers;
-          var user = {name : ''};
-
-          users.once("value", function(snapshot) {
-
-          //  if (snapshot.val().length) {
-              console.log(data_functions.getData(snapshot.val(), {name: ''}));
-          //  }
-          });
-
+        addUser: function(username) {
+          var user = this.$firebaseRefs.onlineUsers.child(username);
+          var userData = {name: '', online: 'true'};
+          userData.name = username;
+          user.set(userData);
         }
+
+        // userExists: function(username) {
+        //   var users = this.$firebaseRefs.onlineUsers;
+        //   var user = {name : ''};
+        //
+        //   users.once("value", function(snapshot) {
+        //
+        //
+        //     console.log(data_functions.getData(snapshot.val(), {name: ''}));
+        //
+        //   });
+        //
+        //
+        // }
       }
     });
   }
