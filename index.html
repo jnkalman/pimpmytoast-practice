@@ -99,17 +99,15 @@
       <h3 class="panel-title">Online Users</h3>
     </div>
     <div class="panel-body">
-      
-      <p class="list-group-item" v-for="user in onlineUsers">
 
-          {{ user.name }}
+      <p v-for="user in onlineUsers">
+          <small><i id="signInStatusIcon" class="fa fa-circle online" aria-hidden="true"></i></small>{{ user.name }}
       </p>
 
 
     </div>
-    <div class="panel-footer">
+    <div id="signInStatusPanel" class="panel-footer">
       <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5>
-      <!-- <button id="signOutButton" @click="signOut" -->
     </div>
 
 

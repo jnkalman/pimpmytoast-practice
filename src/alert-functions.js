@@ -6,9 +6,6 @@ module.exports = {
     var notification = new Notify(message.name, {
       body: message.description,
       tag: message.date,
-      notifyShow: this.onShowNotification,
-      notifyClose: this.onCloseNotification,
-      notifyClick: this.onClickNotification,
       notifyError: this.onErrorNotification,
       timeout: 4
     });
@@ -18,17 +15,6 @@ module.exports = {
     } else if (Notify.isSupported()) {
       Notify.requestPermission(this.onPermissionGranted, this.onPermissionDenied);
     }
-  },
-  onShowNotification: function() {
-    console.log('notification is shown!');
-  },
-
-  onCloseNotification: function() {
-    console.log('notification is closed!');
-  },
-
-  onClickNotification: function() {
-    console.log('notification was clicked!');
   },
 
   onErrorNotification: function() {

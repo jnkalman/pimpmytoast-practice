@@ -91,6 +91,8 @@ module.exports = {
           $("#name").hide();
           $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
           $("#signInStatusIcon").switchClass("offline", "online");
+
+          $("#signInStatusPanel").delay(1000).hide(1000);
           //broadcast added message
           this.$broadcast('messageAdded', this.message.name);
           this.addUser(this.message.name);
@@ -102,7 +104,7 @@ module.exports = {
         var userData = {name: '', online: 'true'};
         userData.name = username;
         user.set(userData);
-
+        // hacky way to remove users
         $( window ).unload(function() {
           user.remove();
         });

@@ -41274,9 +41274,6 @@ module.exports = {
     var notification = new Notify(message.name, {
       body: message.description,
       tag: message.date,
-      notifyShow: this.onShowNotification,
-      notifyClose: this.onCloseNotification,
-      notifyClick: this.onClickNotification,
       notifyError: this.onErrorNotification,
       timeout: 4
     });
@@ -41286,17 +41283,6 @@ module.exports = {
     } else if (Notify.isSupported()) {
       Notify.requestPermission(this.onPermissionGranted, this.onPermissionDenied);
     }
-  },
-  onShowNotification: function() {
-    console.log('notification is shown!');
-  },
-
-  onCloseNotification: function() {
-    console.log('notification is closed!');
-  },
-
-  onClickNotification: function() {
-    console.log('notification was clicked!');
   },
 
   onErrorNotification: function() {
@@ -41472,6 +41458,8 @@ module.exports = {
           $("#name").hide();
           $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
           $("#signInStatusIcon").switchClass("offline", "online");
+
+          $("#signInStatusPanel").delay(1000).hide(1000);
           //broadcast added message
           this.$broadcast('messageAdded', this.message.name);
           this.addUser(this.message.name);
@@ -41483,7 +41471,7 @@ module.exports = {
         var userData = {name: '', online: 'true'};
         userData.name = username;
         user.set(userData);
-
+        // hacky way to remove users
         $( window ).unload(function() {
           user.remove();
         });
