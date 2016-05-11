@@ -19,7 +19,6 @@ module.exports = {
     new Vue({
       // target messages div
       el: '#app',
-      // set up firebase connection
       firebase: {
         messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
         onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
@@ -29,68 +28,51 @@ module.exports = {
       // with data
       ready: function() {
         // when the application loads, call the initialize data method
-        this.subscribe();
+        this.$children[0].subscribeToMessageUpdates();
+        
+        // this.subscribe();
         toggle_functions.scrollToNewMessage();
       },
 
-      // initial object
-      data: {
-        message: { name: '', description: '', date: '' },
-        user: { name: '' }
-      },
-
       components: {
-        'chat-component': chat,
-        'send-component': send
+        'chat-component': chatComponent,
+        'send-component': sendComponent,
+        'users-component': usersComponent
       },
-
-      // custom methods registered here
       methods: {
-        subscribe: function() {
-          var messages = this.$firebaseRefs.messages;
 
-          messages.limitToLast(1).on("value", function(snapshot) {
-            //CHECK HERE, MONDAY JAKE
-            var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
-            console.log(latestMessage);
-            // if not current window, show notification
-            if (!document.hasFocus()) {
-              alert_functions.showNotification(latestMessage);
-            }
-            alert_functions.playNotificationSound(0.35);
-            toggle_functions.scrollToNewMessage();
-          });
-
-        }
-
-        // userExists: function(username) {
-        //   var users = this.$firebaseRefs.onlineUsers;
-        //   var user = {name : ''};
-        //
-        //   users.once("value", function(snapshot) {
-        //
-        //
-        //     console.log(data_functions.getData(snapshot.val(), {name: ''}));
-        //
-        //   });
-        //
-        //
-        // }
-      }
+      },
     });
   }
 
 }
 
 
-  var chat = {
+  var chatComponent = {
     template: "#chatWindow",
     replace: true,
-    methods: {},
+    firebase: {
+      messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
+    },
+    methods: {
+      subscribeToMessageUpdates: function() {
+        var messages = this.$firebaseRefs.messages;
+
+        messages.limitToLast(1).on("value", function(snapshot) {
+          var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
+          // if not current window, show notification
+          if (!document.hasFocus()) {
+            alert_functions.showNotification(latestMessage);
+          }
+          alert_functions.playNotificationSound(0.35);
+          toggle_functions.scrollToNewMessage();
+        });
+      }
+    },
     props: ['messages']
   };
 
-  var send = {
+  var sendComponent = {
     template: "#sendMessageWindow",
     replace: true,
     firebase: {
@@ -128,4 +110,21 @@ module.exports = {
 
     },
     props: ['messages', 'onlineUsers']
+  };
+
+  var usersComponent = {
+    template: "#onlineUsersWindow",
+    replace: true,
+    methods: {
+      // subscribe: function() {
+      //   var onlineUsers = this.$parent.$firebaseRefs.onlineUsers;
+      //
+      //   messages.limitToLast(1).on("value", function(snapshot) {
+      //     //CHECK HERE, MONDAY JAKE
+      //     var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
+      //     console.log(latestMessage);
+      //   }
+      // }
+    },
+    props: ['onlineUsers']
   };
