@@ -41421,7 +41421,8 @@ module.exports = {
       },
 
       components: {
-        'chat-component': chat
+        'chat-component': chat,
+        'send-component': send
       },
 
       // custom methods registered here
@@ -41441,35 +41442,6 @@ module.exports = {
             toggle_functions.scrollToNewMessage();
           });
 
-        },
-
-        // adds an message to the existing messages array
-        addMessage: function() {
-          if (this.message.name) {
-            this.message.date = moment().format('YYYY-MM-DD HH:mm:ss');
-            var messages = this.$firebaseRefs.messages;
-            // add message
-            messages.push(this.message);
-            // reset message
-            this.message = {name: this.message.name, description: '', date: ''};
-            $("#name").hide();
-            $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
-            $("#signInStatusIcon").switchClass("offline", "online");
-            //broadcast added message
-            this.$broadcast('messageAdded', this.message.name);
-            // this.userExists(this.message.name);
-            this.addUser(this.message.name);
-            // if (!userExists(this.message.name)) {
-            //   users.
-            // }
-          }
-        },
-
-        addUser: function(username) {
-          var user = this.$firebaseRefs.onlineUsers.child(username);
-          var userData = {name: '', online: 'true'};
-          userData.name = username;
-          user.set(userData);
         }
 
         // userExists: function(username) {
@@ -41497,6 +41469,46 @@ module.exports = {
     replace: true,
     methods: {},
     props: ['messages']
+  };
+
+  var send = {
+    template: "#sendMessageWindow",
+    replace: true,
+    firebase: {
+      messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
+      onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
+    },
+    data: function() {return {message: { name: '', description: '', date: '' }};},
+    methods: {
+      // adds an message to the existing messages array
+      addMessage: function() {
+        if (this.message.name) {
+          this.message.date = moment().format('YYYY-MM-DD HH:mm:ss');
+          var messages = this.$firebaseRefs.messages;
+          // add message
+          messages.push(this.message);
+          // reset message
+          this.message = {name: this.message.name, description: '', date: ''};
+          $("#name").hide();
+          $("#signInStatus").html($("#signInStatus").html().replace("Not signed in.", "Signed in as " + this.message.name));
+          $("#signInStatusIcon").switchClass("offline", "online");
+          //broadcast added message
+          this.$broadcast('messageAdded', this.message.name);
+          this.addUser(this.message.name);
+        }
+      },
+
+      addUser: function(username) {
+        var user = this.$firebaseRefs.onlineUsers.child(username);
+        var userData = {name: '', online: 'true'};
+        userData.name = username;
+        user.set(userData);
+      }
+
+
+
+    },
+    props: ['messages', 'onlineUsers']
   };
 
 },{"../alert-functions":34,"../data-functions":35,"../toggle-functions":36,"firebase":3,"jquery":5,"jquery-ui":4,"moment":6,"notifyjs":7,"vue":32,"vue-resource":21,"vuefire":33}]},{},[1]);

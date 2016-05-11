@@ -53,20 +53,8 @@
       <!-- add a message form -->
       <div class="col-xs-12">
 
-        <form id="messageForm" class="form-inline">
-          <!-- the values typed in these fields will be bound to the view model and will be available elsewhere in the application -->
-          <div class="form-group">
-            <input id="name" class="form-control" placeholder="Name" maxlength=16 v-model="message.name">
-          </div>
-          <div class="input-group">
-            <input id="messageText" class="form-control" placeholder="Message" v-model="message.description" ></input>
+        <send-component :messages="messages" />
 
-
-            <!-- pass a method to be run on click (addmessage), could use on keyup or other messages that are less specific than angular's ng-click method -->
-
-            <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
-          </div>
-        </form>
       </div>
     </div>
     <div id="onlineUsers" class="col-xs-12 col-md-3">
@@ -81,6 +69,7 @@
       </div>
       <div class="panel-footer">
         <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5>
+        <!-- <button id="signOutButton" @click="signOut" -->
       </div>
     </div>
   </div>
@@ -101,6 +90,18 @@
       {{ message.date }}
     </em></small></h6>
   </li>
+  </script>
+
+  <script type="text/x-template" id="sendMessageWindow">
+  <form id="messageForm" class="form-inline">
+    <div class="form-group">
+      <input id="name" class="form-control" placeholder="Name" maxlength=16 v-model="message.name">
+    </div>
+    <div class="input-group">
+      <input id="messageText" class="form-control" placeholder="Message" v-model="message.description" ></input>
+      <button id="submitButton" class="btn btn-primary" @click= "addMessage" type="submit"><i class="fa fa-paper-plane" aria-hidden="true"></i></button>
+    </div>
+  </form>
   </script>
 
   <script type="text/x-template" id="onlineUsersWindow">
