@@ -29,7 +29,8 @@ module.exports = {
       ready: function() {
         // when the application loads, call the initialize data method
         this.$children[0].subscribeToMessageUpdates();
-        
+//        this.$children[2].subscribeToUserUpdates();
+
         // this.subscribe();
         toggle_functions.scrollToNewMessage();
       },
@@ -38,10 +39,7 @@ module.exports = {
         'chat-component': chatComponent,
         'send-component': sendComponent,
         'users-component': usersComponent
-      },
-      methods: {
-
-      },
+      }
     });
   }
 
@@ -104,6 +102,10 @@ module.exports = {
         var userData = {name: '', online: 'true'};
         userData.name = username;
         user.set(userData);
+
+        $( window ).unload(function() {
+          user.remove();
+        });
       }
 
 
@@ -114,16 +116,19 @@ module.exports = {
 
   var usersComponent = {
     template: "#onlineUsersWindow",
+    firebase: {
+      onlineUsers: new Firebase('https://radiant-torch-6650.firebaseio.com/onlineUsers')
+    },
     replace: true,
     methods: {
-      // subscribe: function() {
-      //   var onlineUsers = this.$parent.$firebaseRefs.onlineUsers;
+      // subscribeToUserUpdates: function() {
+      //   var onlineUsers = this.$firebaseRefs.onlineUsers;
       //
-      //   messages.limitToLast(1).on("value", function(snapshot) {
-      //     //CHECK HERE, MONDAY JAKE
-      //     var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
-      //     console.log(latestMessage);
-      //   }
+      //   onlineUsers.orderByChild('online').equalTo('true').on("value", function(snapshot) {
+      //
+      //     var users = data_functions.getData(snapshot.val(), {name: ''});
+      //     console.log(users);
+      //   });
       // }
     },
     props: ['onlineUsers']
