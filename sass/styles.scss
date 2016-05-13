@@ -1,3 +1,7 @@
+body {
+  padding-top: 50px;
+}
+
 .size-fixed {
     height: 450px;
     overflow-y:scroll;
@@ -20,8 +24,11 @@ nav {
   background-color: transparent;
 }
 
-#onlineUsers.panel-body {
-  padding-bottom: 5px;
+
+
+
+#onlineUsers .panel-body {
+  padding-bottom: 5px !important;
 }
 
 #individualMessage {
@@ -59,4 +66,69 @@ nav {
     &.offline {
       color: #D03B3B;
     }
+}
+
+
+#onlineUsers {
+  .nav {
+    width: 95%;
+  }
+  li {
+    border: 0 #f2f2f2 solid;
+    border-bottom-width: 1px;
+  }
+}
+
+#navbar {
+  background-color: transparent;
+  padding-bottom: 40px;
+  padding-left:13px;
+}
+
+#navbar-button {
+  padding-right: 14px;
+}
+
+@media screen and (min-width: 768px) {
+  #navbar {
+    display:hidden;
+  }
+}
+
+/* collapsed sidebar/nav styles */
+@media screen and (max-width: 767px) {
+  .row-offcanvas {
+    position: relative;
+    -webkit-transition: all 0.25s ease-out;
+    -moz-transition: all 0.25s ease-out;
+    transition: all 0.25s ease-out;
+  }
+  .row-offcanvas-right .sidebar-offcanvas {
+    right: -41.6%;
+  }
+  .row-offcanvas-left .sidebar-offcanvas {
+    left: -41.6%;
+  }
+  .row-offcanvas-right.active {
+    right: 41.6%;
+  }
+  .row-offcanvas-left.active {
+    left: 41.6%;
+  }
+  .sidebar-offcanvas {
+    position: absolute;
+    top: 0;
+    width: 41.6%;
+  }
+  #onlineUsers {
+    padding-top: 0;
+  }
+
+  #navbar {
+    display: block;
+  }
+
+  h1 {
+    display: none;
+  }
 }

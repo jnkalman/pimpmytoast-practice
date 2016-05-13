@@ -10,6 +10,10 @@ $(document).ready(function() {
     e.preventDefault();
   });
 
+  $('[data-toggle=offcanvas]').click(function() {
+    $('.row-offcanvas').toggleClass('active', 400);
+  });
+
   toggle.addButtonEnabledSwitch();
   toggle.scrollToNewMessage();
   $("#name").focus();

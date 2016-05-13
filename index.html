@@ -4,62 +4,85 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <link rel="icon"
-      type="image/png"
-      href="favicon.ico">
+  <meta name="viewport" content="width=device-width" />
+  <link rel="icon" type="image/png" href="favicon.ico">
   <title>Messenger</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
-  <link rel="stylesheet" href="dist/css/styles.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.2/css/font-awesome.min.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.6/superhero/bootstrap.min.css">
+  <link rel="stylesheet" href="dist/css/styles.min.css">
+
 </head>
 <body id="app" background="images/mountains.png">
 
   <!-- navigation bar -->
   <!-- <nav class="navbar navbar-default">
-    <div class="container-fluid">
-      <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Messenger</a>
-      <ul class="nav navbar-nav navbar-right">
-        <li> -->
-          <!-- <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5> -->
-          <!-- <h5 id="signedInName"><i class="fa fa-circle online" aria-hidden="true"></i> Signed in as {{ message.name }} </h5> -->
-        <!-- </li>
-      </ul>
-    </div>
-
-
-
-  </nav> -->
-
-
-  <!-- main body of our application -->
-  <div class="container">
-<div class="col-xs-12">
-    <h1 class="title">Messenger.</h1>
+  <div class="container-fluid">
+  <a class="navbar-brand"><i class="glyphicon glyphicon-bullhorn"></i> Messenger</a>
+  <ul class="nav navbar-nav navbar-right">
+  <li> -->
+  <!-- <h5 id="signInStatus"><i id="signInStatusIcon" class="fa fa-circle offline" aria-hidden="true"></i>Not signed in. </h5> -->
+  <!-- <h5 id="signedInName"><i class="fa fa-circle online" aria-hidden="true"></i> Signed in as {{ message.name }} </h5> -->
+  <!-- </li>
+</ul>
 </div>
-    <div class="col-xs-12 col-md-9">
-      <!-- show the messages -->
-      <div class="col-xs-12">
-        <chat-component :messages="messages" />
-      </div>
 
-      <!-- add a message form -->
-      <div class="col-xs-12">
-        <send-component :messages="messages" />
-      </div>
+
+
+</nav> -->
+
+
+<!-- main body of our application -->
+<div class="canvas">
+  <!-- top navbar -->
+    <div id="navbar" class="navbar navbar-default navbar-fixed-top" role="navigation">
+       <div class="container">
+    	<div class="navbar-header">
+           <button id="navbar-button" type="button" class="navbar-toggle" data-toggle="offcanvas" data-target=".sidebar-nav">
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+             <span class="icon-bar"></span>
+           </button>
+           <a id="navbar-brand" class="navbar-brand" href="#">Messenger.</a>
+    	</div>
+       </div>
     </div>
 
-    <div id="onlineUsers" class="col-xs-12 col-md-3">
-      <users-component :users="users" />
-    </div>
+  <div class="container">
+    <div class="row row-offcanvas row-offcanvas-right">
 
+
+      <div class="col-xs-12">
+        <h1 class="title">Messenger.</h1>
+      </div>
+      <div class="col-lg-12 col-lg-9">
+        <!-- show the messages -->
+        <div class="col-xs-12">
+          <chat-component :messages="messages" />
+        </div>
+
+        <!-- add a message form -->
+        <div class="col-xs-12">
+          <send-component :messages="messages" />
+        </div>
+      </div>
+
+      <!-- sidebar -->
+      <div class="col-xs-6 col-sm-3 sidebar-offcanvas" id="onlineUsers" role="navigation">
+        <div class="nav">
+          <users-component :users="users" />
+        </div>
+      </div>
+
+    </div>
   </div>
 
+</div>
   <!-- JS -->
   <script src="dist/js/app.js"></script>
-
+  <script src="dist/js/jasny-bootstrap.js"></script>
   <script type="text/x-template" id="chatWindow">
   <div id="messageWindow" class="list-group size-fixed">
     <!-- using handlebars templates -->
@@ -101,7 +124,7 @@
     <div class="panel-body">
 
       <p v-for="user in onlineUsers">
-          <small><i id="signInStatusIcon" class="fa fa-circle online" aria-hidden="true"></i></small>{{ user.name }}
+          <i id="signInStatusIcon" class="fa fa-circle online" aria-hidden="true"></i>{{ user.name }}
       </p>
 
 
