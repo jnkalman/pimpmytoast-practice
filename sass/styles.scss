@@ -89,14 +89,14 @@ nav {
   padding-right: 14px;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 1200px) {
   #navbar {
     display:hidden;
   }
 }
 
 /* collapsed sidebar/nav styles */
-@media screen and (max-width: 767px) {
+@media screen and (max-width: 1200px) {
   .row-offcanvas {
     position: relative;
     -webkit-transition: all 0.25s ease-out;
@@ -124,9 +124,7 @@ nav {
     padding-top: 0;
   }
 
-  #navbar {
-    display: block;
-  }
+
 
   h1 {
     display: none;
