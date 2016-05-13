@@ -41359,12 +41359,7 @@ module.exports = {
 
   scrollToNewMessage: function() {
     var target = $('#messageWindow');
-    if( target.length ) {
-      event.preventDefault();
-      target.animate({
-        scrollBottom: target.offset().top
-      }, 200);
-    }
+    target.scrollTop(target.prop("scrollHeight"));
   }
 }
 
@@ -41399,7 +41394,7 @@ module.exports = {
       // with data
       ready: function() {
         // when the application loads, call the initialize data method
-        this.$children[0].subscribeToMessageUpdates();
+        // this.$children[0].subscribeToMessageUpdates();
 //        this.$children[2].subscribeToUserUpdates();
 
         // this.subscribe();
@@ -41423,20 +41418,33 @@ module.exports = {
     firebase: {
       messages: new Firebase('https://radiant-torch-6650.firebaseio.com/messages').limitToLast(25),
     },
-    methods: {
-      subscribeToMessageUpdates: function() {
-        var messages = this.$firebaseRefs.messages;
+    ready: function() {
+      var messages = this.$firebaseRefs.messages;
 
-        messages.limitToLast(1).on("value", function(snapshot) {
-          var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
-          // if not current window, show notification
-          if (!document.hasFocus()) {
-            alert_functions.showNotification(latestMessage);
-          }
-          alert_functions.playNotificationSound(0.35);
-          toggle_functions.scrollToNewMessage();
-        });
-      }
+      messages.limitToLast(1).on("value", function(snapshot) {
+        var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
+        // if not current window, show notification
+        if (!document.hasFocus()) {
+          alert_functions.showNotification(latestMessage);
+        }
+        alert_functions.playNotificationSound(0.35);
+        toggle_functions.scrollToNewMessage();
+      });
+    },
+    methods: {
+      // subscribeToMessageUpdates: function() {
+      //   var messages = this.$firebaseRefs.messages;
+      //
+      //   messages.limitToLast(1).on("value", function(snapshot) {
+      //     var latestMessage = data_functions.getData(snapshot.val(), {name: '', description: '', date: ''});
+      //     // if not current window, show notification
+      //     if (!document.hasFocus()) {
+      //       alert_functions.showNotification(latestMessage);
+      //     }
+      //     alert_functions.playNotificationSound(0.35);
+      //     toggle_functions.scrollToNewMessage();
+      //   });
+      // }
     },
     props: ['messages']
   };
@@ -41467,6 +41475,7 @@ module.exports = {
           //broadcast added message
           this.$broadcast('messageAdded', this.message.name);
           this.addUser(this.message.name);
+            toggle_functions.scrollToNewMessage();
         }
       },
 

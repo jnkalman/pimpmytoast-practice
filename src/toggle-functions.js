@@ -17,11 +17,6 @@ module.exports = {
 
   scrollToNewMessage: function() {
     var target = $('#messageWindow');
-    if( target.length ) {
-      event.preventDefault();
-      target.animate({
-        scrollBottom: target.offset().top
-      }, 200);
-    }
+    target.scrollTop(target.prop("scrollHeight"));
   }
 }
