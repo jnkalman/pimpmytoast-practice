@@ -1,4 +1,4 @@
-# pimpmytoast messenger
+# messenger
 
 ### play with it at https://radiant-torch-6650.firebaseapp.com/
 
